@@ -1,10 +1,9 @@
 package com.smallaswater.serverinfo.network;
 
-import cn.nukkit.Server;
+
 import com.smallaswater.serverinfo.ServerInfoMainClass;
 import com.smallaswater.serverinfo.servers.ServerInfo;
 
-import java.util.Iterator;
 
 /**
  * @author SmallasWater
