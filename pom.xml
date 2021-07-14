@@ -41,6 +41,10 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
+        <repository>
+            <id>repo-lanink-cn</id>
+            <url>https://repo.lanink.cn/</url>
+        </repository>
     </repositories>
     <dependencies>
         <dependency>
@@ -61,8 +65,12 @@
             <version>RELEASE</version>
             <scope>provided</scope>
         </dependency>
-
-
+        <dependency>
+            <groupId>com.smallaswater.npc</groupId>
+            <artifactId>RsNPCX</artifactId>
+            <version>1.6.1</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
     <build>
         <finalName>${project.artifactId}_v${project.version}</finalName>
