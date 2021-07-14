@@ -12,6 +12,7 @@ import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.TextFormat;
 import com.smallaswater.serverinfo.network.UpdateServerInfoRunnable;
 import com.smallaswater.serverinfo.servers.ServerInfo;
+import com.smallaswater.serverinfo.utils.RsNpcXVariable;
 import com.smallaswater.serverinfo.windows.CreateWindow;
 import lombok.Getter;
 
@@ -44,6 +45,14 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
         this.getLogger().info("服务器信息加载完成");
         THREAD_POOL.execute(new UpdateServerInfoRunnable());
         this.getServer().getPluginManager().registerEvents(instance, instance);
+
+        try {
+            Class.forName("com.smallaswater.npc.variable.VariableManage");
+            com.smallaswater.npc.variable.VariableManage.addVariable("ServerInfoVariable", RsNpcXVariable.class);
+        } catch (Exception ignored) {
+
+        }
+
     }
 
     public void call(String callback,String[] data){
