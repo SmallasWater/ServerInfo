@@ -1,0 +1,7 @@
+name: ServerInfo
+main: com.smallaswater.serverinfo.ServerInfoMainClass
+version: 1.0.0
+api: 1.0.11
+commands:
+  trs:
+    description: 显示跨服服务器GUI
