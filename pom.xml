@@ -47,8 +47,7 @@
             <groupId>cn.nukkit</groupId>
             <artifactId>nukkit</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath> F:/Nukkit驱动/nukkit_1.16.210_b843.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
@@ -57,20 +56,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
-            <groupId>me.onebone</groupId>
-            <artifactId>economyapi</artifactId>
-            <version>1.1.7</version> <!-- 记得修改到已经安装到本地库最新版本 -->
-            <scope>system</scope>
-            <systemPath>F:/Nukkit驱动/EconomyAPI.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>de.theamychan</groupId>
-            <artifactId>ScoreboardAPI</artifactId>
-            <version>1.0.3</version>
-            <scope>system</scope>
-            <systemPath>F:/Nukkit驱动/[Tips前置(v1.2.7)]ScoreboardAPI-1.3.jar</systemPath>
-        </dependency>
 
         <!--        <dependency>-->
         <!--            <groupId>org.projectlombok</groupId>-->
