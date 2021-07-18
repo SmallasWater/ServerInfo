@@ -3,3 +3,11 @@ server-info:
   - name: "测试服务器 #1"
     ip: "154.8.193.146"
     port: 19132
+#服务器关闭时传送到其他服务器
+ServerCloseTransfer:
+  enable: false
+  showTitle:
+    title: "服务器即将关闭!"
+    subTitle: "您将会被转移到其他服务器!"
+  ip: "127.0.0.1"
+  port: 19132

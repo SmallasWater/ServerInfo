@@ -7,6 +7,7 @@ import cn.nukkit.command.CommandSender;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerFormRespondedEvent;
+import cn.nukkit.event.server.ServerStopEvent;
 import cn.nukkit.form.response.FormResponseSimple;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.TextFormat;
@@ -110,6 +111,43 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
             }else{
                 event.getPlayer().sendMessage(TextFormat.colorize('&',"&e[&f跨服&e] 服务器离线"));
             }
+        }
+    }
+
+    @EventHandler
+    public void onServerStop(ServerStopEvent event) {
+        if (!this.getConfig().getBoolean("ServerCloseTransfer.enable") ||
+                this.getServer().getOnlinePlayers().isEmpty()) {
+            return;
+        }
+        for (Player player : this.getServer().getOnlinePlayers().values()) {
+            player.sendTitle(
+                    this.getConfig().getString("ServerCloseTransfer.showTitle.title"),
+                    this.getConfig().getString("ServerCloseTransfer.showTitle.subTitle"),
+                    10,
+                    100,
+                    20
+            );
+        }
+
+        try {
+            Thread.sleep(4000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        for (Player player : this.getServer().getOnlinePlayers().values()) {
+            player.transfer(
+                    new InetSocketAddress(
+                            this.getConfig().getString("ServerCloseTransfer.ip"),
+                            this.getConfig().getInt("ServerCloseTransfer.port")
+                    )
+            );
+        }
+        try {
+            //让服务器发送完数据包再关闭
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
