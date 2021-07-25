@@ -14,8 +14,10 @@ import cn.nukkit.utils.TextFormat;
 import com.smallaswater.serverinfo.network.UpdateServerInfoRunnable;
 import com.smallaswater.serverinfo.servers.ServerInfo;
 import com.smallaswater.serverinfo.utils.RsNpcXVariable;
+import com.smallaswater.serverinfo.utils.TipsVariable;
 import com.smallaswater.serverinfo.windows.CreateWindow;
 import lombok.Getter;
+import tip.utils.Api;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -45,6 +47,9 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
         loadServer();
         this.getLogger().info("服务器信息加载完成");
         THREAD_POOL.execute(new UpdateServerInfoRunnable());
+        //注册TIPS变量
+        Api.registerVariables("serverInfo", TipsVariable.class);
+
         this.getServer().getPluginManager().registerEvents(instance, instance);
 
         try {
