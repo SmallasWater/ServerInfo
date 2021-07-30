@@ -18,9 +18,10 @@ public class TipsVariable extends BaseVariable {
 
     @Override
     public void strReplace() {
-
+        int maxOnline = 0;
         for (ServerInfo info : ServerInfoMainClass.getInstance().getServerInfos()) {
             if(info.onLine()) {
+                maxOnline += info.getPlayer();
                 addStrReplaceString("{ServerInfoPlayer@" + info.getCallback() + "}", info.getPlayer() + "");
                 addStrReplaceString("{ServerInfoMaxPlayer@" + info.getCallback() + "}", info.getMaxPlayer() + "");
             }else{
@@ -29,6 +30,7 @@ public class TipsVariable extends BaseVariable {
             }
 
         }
+        addStrReplaceString("{ServerInfoPlayer}",maxOnline+"");
 
     }
 
