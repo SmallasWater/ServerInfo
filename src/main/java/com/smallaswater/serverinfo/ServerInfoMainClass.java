@@ -47,11 +47,17 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
         loadServer();
         this.getLogger().info("服务器信息加载完成");
         THREAD_POOL.execute(new UpdateServerInfoRunnable());
-        //注册TIPS变量
-        Api.registerVariables("serverInfo", TipsVariable.class);
 
         this.getServer().getPluginManager().registerEvents(instance, instance);
 
+        //注册TIPS变量
+        try {
+            Api.registerVariables("serverInfo", TipsVariable.class);
+        } catch (Exception ignored) {
+
+        }
+
+        //注册RsNPCX变量
         try {
             Class.forName("com.smallaswater.npc.variable.VariableManage");
             com.smallaswater.npc.variable.VariableManage.addVariable("ServerInfoVariable", RsNpcXVariable.class);
@@ -71,10 +77,9 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
     }
 
     private void loadServer(){
-        serverInfos.clear();
-        ServerInfo info;
+        this.serverInfos.clear();
         for(Map map:getConfig().getMapList("server-info")){
-            info = new ServerInfo(map.get("name").toString(),map.get("ip").toString(),Integer.parseInt(map.get("port").toString()));
+            ServerInfo info = new ServerInfo(map.get("name").toString(),map.get("ip").toString(),Integer.parseInt(map.get("port").toString()));
             serverInfos.add(info);
             this.getLogger().info("加载服务器 "+info.getCallback()+" 完成");
         }
@@ -104,7 +109,7 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
 
     @EventHandler
     public void onWindow(PlayerFormRespondedEvent event){
-        if(event.wasClosed()){
+        if(event.wasClosed() || event.getResponse() == null){
             return;
         }
         if(event.getFormID() == CreateWindow.MENU){
@@ -125,6 +130,7 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
                 this.getServer().getOnlinePlayers().isEmpty()) {
             return;
         }
+
         for (Player player : this.getServer().getOnlinePlayers().values()) {
             player.sendTitle(
                     this.getConfig().getString("ServerCloseTransfer.showTitle.title"),
@@ -134,12 +140,12 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
                     20
             );
         }
-
         try {
             Thread.sleep(4000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         for (Player player : this.getServer().getOnlinePlayers().values()) {
             player.transfer(
                     new InetSocketAddress(
@@ -150,7 +156,7 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
         }
         try {
             //让服务器发送完数据包再关闭
-            Thread.sleep(2000);
+            Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
