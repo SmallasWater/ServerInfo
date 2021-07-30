@@ -5,3 +5,4 @@ api: 1.0.11
 commands:
   trs:
     description: 显示跨服服务器GUI
+    usage: "/trs 打开GUI界面(游戏内)"
