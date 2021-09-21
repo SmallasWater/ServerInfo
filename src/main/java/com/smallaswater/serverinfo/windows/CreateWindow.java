@@ -18,7 +18,11 @@ public class CreateWindow {
     public static final int MENU = 0x55011;
 
     public static void showMenu(Player player){
-        FormWindowSimple simple = new FormWindowSimple("跨服菜单","");
+        FormWindowSimple simple = new FormWindowSimple(TextFormat.colorize('&',
+                ServerInfoMainClass.getInstance().getLanguage().getString("menu-title"))
+                ,TextFormat.colorize('&',
+                ServerInfoMainClass.getInstance().getLanguage().getString("menu-text").replace("{sum}",
+                        ServerInfoMainClass.getInstance().getAllPlayerSize()+"")));
         for(ServerInfo info: ServerInfoMainClass.getInstance().getServerInfos()){
             simple.addButton(new ElementButton(TextFormat.colorize('&',info.toButtonText())
                     ,new ElementButtonImageData("path","textures/ui/icon_new")));

@@ -6,7 +6,7 @@
 
     <groupId>com.smallaswater.ServerInfo</groupId>
     <artifactId>ServerInfo</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.6</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>

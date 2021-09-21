@@ -1,8 +1,11 @@
 package com.smallaswater.serverinfo.network;
 
 
+import cn.nukkit.Server;
+import cn.nukkit.network.protocol.PlayerListPacket;
 import com.smallaswater.serverinfo.ServerInfoMainClass;
 import com.smallaswater.serverinfo.servers.ServerInfo;
+
 
 
 /**
@@ -18,6 +21,8 @@ public class UpdateServerInfoRunnable implements Runnable {
             for (ServerInfo info : ServerInfoMainClass.getInstance().getServerInfos()) {
                 ServerInfoMainClass.THREAD_POOL.execute(new SendPacketRunnable(info));
             }
+
+
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {

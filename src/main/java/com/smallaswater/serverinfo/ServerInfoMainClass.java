@@ -7,9 +7,11 @@ import cn.nukkit.command.CommandSender;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerFormRespondedEvent;
+import cn.nukkit.event.server.QueryRegenerateEvent;
 import cn.nukkit.event.server.ServerStopEvent;
 import cn.nukkit.form.response.FormResponseSimple;
 import cn.nukkit.plugin.PluginBase;
+import cn.nukkit.utils.Config;
 import cn.nukkit.utils.TextFormat;
 import com.smallaswater.serverinfo.network.UpdateServerInfoRunnable;
 import com.smallaswater.serverinfo.servers.ServerInfo;
@@ -34,6 +36,8 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
 
     private static ServerInfoMainClass instance;
 
+    private Config language;
+
     @Getter
     private ArrayList<ServerInfo> serverInfos = new ArrayList<>();
 
@@ -45,6 +49,7 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
         saveDefaultConfig();
         reloadConfig();
         loadServer();
+        language = new Config(this.getDataFolder()+"/language.yml",Config.YAML);
         this.getLogger().info("服务器信息加载完成");
         THREAD_POOL.execute(new UpdateServerInfoRunnable());
 
@@ -56,7 +61,6 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
         } catch (Exception ignored) {
 
         }
-
         //注册RsNPCX变量
         try {
             Class.forName("com.smallaswater.npc.variable.VariableManage");
@@ -66,6 +70,21 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
         }
 
 
+
+    }
+
+    public Config getLanguage() {
+        return language;
+    }
+
+    public int getAllPlayerSize(){
+        int maxOnline = 0;
+        for (ServerInfo info : ServerInfoMainClass.getInstance().getServerInfos()) {
+            if(info.onLine()) {
+                maxOnline += info.getPlayer();
+            }
+        }
+        return maxOnline;
     }
 
     public void call(String callback,String[] data){
@@ -109,6 +128,13 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
     }
 
     @EventHandler
+    public void onQueryRegenerateEvent(QueryRegenerateEvent event) {
+        if (getConfig().getBoolean("sync-player", false)) {
+            event.setPlayerCount(Server.getInstance().getOnlinePlayers().size() + getAllPlayerSize());
+        }
+    }
+
+    @EventHandler
     public void onWindow(PlayerFormRespondedEvent event){
         if(event.wasClosed() || event.getResponse() == null){
             return;
@@ -117,10 +143,11 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
             ServerInfo info = getServerInfos().get(
                     ((FormResponseSimple)event.getResponse()).getClickedButtonId());
             if(info.onLine()){
-                Server.getInstance().broadcastMessage(TextFormat.colorize('&',"&e玩家 &a"+event.getPlayer().getName()+" &e前往了 &r"+info.getCallback()+" &e服务器"));
+                Server.getInstance().broadcastMessage(TextFormat.colorize('&',language.getString("player-transfer-text","").replace("{server}",info.getCallback()))
+                .replace("{name}",event.getPlayer().getName()));
                 event.getPlayer().transfer(new InetSocketAddress(info.getIp(),info.getPort()));
             }else{
-                event.getPlayer().sendMessage(TextFormat.colorize('&',"&e[&f跨服&e] 服务器离线"));
+                event.getPlayer().sendMessage(TextFormat.colorize('&',language.getString("player-transfer-off","")));
             }
         }
     }

@@ -4,6 +4,10 @@ server-info:
     ip: "154.8.193.146"
     port: 19132
 
+# 使用说明:
+# 开启此选项千万不要将开启这个选项的服务器
+# 写入 server-info
+sync-player: false
 #服务器关闭时传送到其他服务器
 ServerCloseTransfer:
   enable: false

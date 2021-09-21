@@ -1,7 +1,8 @@
 name: ServerInfo
 main: com.smallaswater.serverinfo.ServerInfoMainClass
-version: 1.0.3
+version: 1.0.6
 api: 1.0.11
+load: POSTWORLD
 commands:
   trs:
     description: 显示跨服服务器GUI

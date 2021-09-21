@@ -1,5 +1,6 @@
 package com.smallaswater.serverinfo.servers;
 
+import com.smallaswater.serverinfo.ServerInfoMainClass;
 import lombok.Data;
 
 /**
@@ -43,9 +44,12 @@ public class ServerInfo {
 
     public String toButtonText(){
         if(onLine()){
-            return callback+"\n&e"+player+" &7/&6 "+maxPlayer+"  &a在线";
+            return ServerInfoMainClass.getInstance().getLanguage().getString("button-text-online","")
+                    .replace("{server}",callback).replace("{player}",player+"").replace("{maxplayer}",maxPlayer+"");
+//            return callback+"\n&e"+player+" &7/&6 "+maxPlayer+"  &a在线";
         }else{
-            return callback+"\n&c服务器离线";
+            return ServerInfoMainClass.getInstance().getLanguage().getString("button-text-offline","")
+                    .replace("{server}",callback);
         }
     }
 
