@@ -25,7 +25,7 @@ public class RsNpcXVariable extends BaseVariable {
                         .replace("{ServerInfoMaxPlayer@" + info.getCallback() + "}", "服务器离线");
             }
         }
-        return s;
+        return s.replace("{ServerInfoPlayer}", ServerInfoMainClass.getInstance().getAllPlayerSize()+"");
     }
 
     public static class RsNpcXVariableV2 extends BaseVariableV2 {
@@ -41,6 +41,7 @@ public class RsNpcXVariable extends BaseVariable {
                     this.addVariable("{ServerInfoMaxPlayer@" + info.getCallback() + "}", "服务器离线");
                 }
             }
+            this.addVariable("{ServerInfoPlayer}", ServerInfoMainClass.getInstance().getAllPlayerSize()+"");
         }
 
     }
