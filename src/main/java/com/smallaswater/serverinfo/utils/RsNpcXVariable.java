@@ -1,7 +1,9 @@
 package com.smallaswater.serverinfo.utils;
 
 import cn.nukkit.Player;
+import com.smallaswater.npc.data.RsNpcConfig;
 import com.smallaswater.npc.variable.BaseVariable;
+import com.smallaswater.npc.variable.BaseVariableV2;
 import com.smallaswater.serverinfo.ServerInfoMainClass;
 import com.smallaswater.serverinfo.servers.ServerInfo;
 
@@ -24,6 +26,23 @@ public class RsNpcXVariable extends BaseVariable {
             }
         }
         return s;
+    }
+
+    public static class RsNpcXVariableV2 extends BaseVariableV2 {
+
+        @Override
+        public void onUpdate(Player player, RsNpcConfig rsNpcConfig) {
+            for (ServerInfo info : ServerInfoMainClass.getInstance().getServerInfos()) {
+                if (info.onLine()) {
+                    this.addVariable("{ServerInfoPlayer@" + info.getCallback() + "}", info.getPlayer() + "");
+                    this.addVariable("{ServerInfoMaxPlayer@" + info.getCallback() + "}", info.getMaxPlayer() + "");
+                }else {
+                    this.addVariable("{ServerInfoPlayer@" + info.getCallback() + "}", "服务器离线");
+                    this.addVariable("{ServerInfoMaxPlayer@" + info.getCallback() + "}", "服务器离线");
+                }
+            }
+        }
+
     }
 
 }

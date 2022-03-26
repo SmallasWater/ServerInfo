@@ -54,16 +54,15 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.smallaswater</groupId>
+            <groupId>com.smallaswater.tips</groupId>
             <artifactId>tips</artifactId>
-            <version>1.9.4</version> <!-- 记得修改到已经安装到本地库最新版本 -->
-            <scope>system</scope>
-            <systemPath>F:/Nukkit开服/plugins/Tips_v1.9.4.jar</systemPath>
+            <version>2.1.2</version> <!-- 记得修改到已经安装到本地库最新版本 -->
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>21.0.1</version>
+            <version>23.0.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -75,7 +74,7 @@
         <dependency>
             <groupId>com.smallaswater.npc</groupId>
             <artifactId>RsNPCX</artifactId>
-            <version>1.6.1</version>
+            <version>1.8.7</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
