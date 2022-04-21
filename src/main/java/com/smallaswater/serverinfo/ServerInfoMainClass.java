@@ -57,19 +57,23 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
 
         //注册TIPS变量
         try {
+            Class.forName("tip.utils.Api");
             Api.registerVariables("serverInfo", TipsVariable.class);
         } catch (Exception ignored) {
 
         }
         //注册RsNPCX变量
         try {
-            Class.forName("com.smallaswater.npc.variable.VariableManage");
-            com.smallaswater.npc.variable.VariableManage.addVariable("ServerInfoVariable", RsNpcXVariable.class);
-        } catch (Exception ignored) {
+            Class.forName("com.smallaswater.npc.variable.BaseVariableV2");
+            com.smallaswater.npc.variable.VariableManage.addVariableV2("ServerInfoVariable", RsNpcXVariable.RsNpcXVariableV2.class);
+        }catch (Exception e) {
+            try {
+                Class.forName("com.smallaswater.npc.variable.VariableManage");
+                com.smallaswater.npc.variable.VariableManage.addVariable("ServerInfoVariable", RsNpcXVariable.class);
+            } catch (Exception ignored) {
 
+            }
         }
-
-
 
     }
 

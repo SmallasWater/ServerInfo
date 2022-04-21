@@ -6,7 +6,8 @@
 
     <groupId>com.smallaswater.ServerInfo</groupId>
     <artifactId>ServerInfo</artifactId>
-    <version>1.0.6</version>
+    <version>1.0.8-SNAPSHOT</version>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -46,6 +47,7 @@
             <url>https://repo.lanink.cn/</url>
         </repository>
     </repositories>
+
     <dependencies>
         <dependency>
             <groupId>cn.nukkit</groupId>
@@ -54,31 +56,31 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.smallaswater</groupId>
+            <groupId>com.smallaswater.tips</groupId>
             <artifactId>tips</artifactId>
-            <version>1.9.4</version> <!-- 记得修改到已经安装到本地库最新版本 -->
-            <scope>system</scope>
-            <systemPath>F:/Nukkit开服/plugins/Tips_v1.9.4.jar</systemPath>
+            <version>2.1.2</version> <!-- 记得修改到已经安装到本地库最新版本 -->
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>21.0.1</version>
+            <version>23.0.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>RELEASE</version>
+            <version>1.18.22</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.smallaswater.npc</groupId>
             <artifactId>RsNPCX</artifactId>
-            <version>1.6.1</version>
+            <version>1.8.7</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
+
     <build>
         <finalName>${project.artifactId}_v${project.version}</finalName>
         <plugins>
@@ -90,6 +92,31 @@
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.google.code.maven-replacer-plugin</groupId>
+                <artifactId>replacer</artifactId>
+                <version>1.5.3</version>
+                <executions>
+                    <execution>
+                        <id>add-version</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>${project.basedir}/src/main/resources/plugin.yml</include>
+                            </includes>
+                            <replacements>
+                                <replacement>
+                                    <token>version: .*</token>
+                                    <value>version: ${project.version}</value>
+                                </replacement>
+                            </replacements>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
