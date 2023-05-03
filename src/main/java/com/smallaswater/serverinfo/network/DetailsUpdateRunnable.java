@@ -77,8 +77,9 @@ public class DetailsUpdateRunnable implements Runnable {
         DatagramSocket socket = new DatagramSocket();
         try {
             socket.setSoTimeout(5000);
-            DatagramPacket packet = new DatagramPacket(Arrays.copyOf(binaryStream.getBuffer(), 64), 64, InetAddress.getByName(this.host), this.port);
+            DatagramPacket packet = new DatagramPacket(Arrays.copyOf(binaryStream.getBuffer(), 19), 19, InetAddress.getByName(this.host), this.port);
             socket.send(packet);
+            packet = new DatagramPacket(Arrays.copyOf(new byte[0], 2048), 2048, InetAddress.getByName(this.host), this.port); //接受数据时重新声明长度
             socket.receive(packet);
             return new BinaryStream(packet.getData());
         } finally {

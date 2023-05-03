@@ -3,7 +3,9 @@ package com.smallaswater.serverinfo.servers;
 import cn.nukkit.utils.BinaryStream;
 import com.smallaswater.serverinfo.ServerInfoMainClass;
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 
+import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -47,10 +49,6 @@ public class ServerInfo {
     }
 
     public void update(byte[] data) {
-        //TODO dev
-        if (true) {
-            return;
-        }
         if (data.length == 0) {
             player = -1;
             maxPlayer = -1;
@@ -58,47 +56,46 @@ public class ServerInfo {
         }
         BinaryStream binaryStream = new BinaryStream(data);
 
-        String s = new String(binaryStream.getByteArray(), StandardCharsets.UTF_8);
-        ServerInfoMainClass.getInstance().getLogger().info(s);
+        //TODO 对读取到的数据进行检查
+        getSubData(binaryStream); //splitnum
+        binaryStream.getByte(); //128
+        binaryStream.getByte(); //0x00
 
-        binaryStream.getByteArray();
-        binaryStream.getByte();
-        binaryStream.getByte();
-        binaryStream.getByte();
-
-        LinkedHashMap<String, String> KVdata = new LinkedHashMap<>();
+        LinkedHashMap<String, String> kvData = new LinkedHashMap<>();
         for (int i = 0; i < 12; i++) {
-            String key = new String(binaryStream.getByteArray(), StandardCharsets.UTF_8);
-            if (binaryStream.getByte() == 0x00) {
-                String value = new String(binaryStream.getByteArray(), StandardCharsets.UTF_8);
-                if (binaryStream.getByte() == 0x00) {
-                    KVdata.put(key, value);
-                }
-            }
+            kvData.put(getSubData(binaryStream), getSubData(binaryStream));
         }
-
-        ServerInfoMainClass.getInstance().getLogger().info(KVdata.toString());
 
         binaryStream.getByte(); //0x00
         binaryStream.getByte(); //0x01
-        binaryStream.getByteArray(); //"player_".getBytes()
-        binaryStream.getByte(); //0x00
+        getSubData(binaryStream);//player_
         binaryStream.getByte(); //0x00
 
         ArrayList<String> players = new ArrayList<>();
-
         while (true) {
-            int aByte = binaryStream.getByte();
-            if (aByte == 0x00) {
+            String playerName = getSubData(binaryStream);
+            if ("".equals(playerName)) {
                 break;
             }
-            players.add(new String(binaryStream.getByteArray(), StandardCharsets.UTF_8));
-            if (binaryStream.getByte() != 0x00) {
-                break;
-            }
+            players.add(playerName);
         }
+    }
 
-        ServerInfoMainClass.getInstance().getLogger().info(players.toString());
+    @NotNull
+    private static String getSubData(BinaryStream binaryStream) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        byte now;
+        while (true) {
+            now = (byte) binaryStream.getByte();
+            if (now == 0x00) { //0x00为每一段数据的结束字符
+                break;
+            }
+            stream.write(now);
+        }
+        if (stream.size() == 0) {
+            return "";
+        }
+        return new String(stream.toByteArray(), StandardCharsets.UTF_8);
     }
 
     public void update(String[] data) {
