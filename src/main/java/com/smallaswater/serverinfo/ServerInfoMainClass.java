@@ -15,8 +15,9 @@ import cn.nukkit.utils.Config;
 import cn.nukkit.utils.TextFormat;
 import com.smallaswater.serverinfo.network.UpdateServerInfoRunnable;
 import com.smallaswater.serverinfo.servers.ServerInfo;
-import com.smallaswater.serverinfo.utils.RsNpcXVariable;
+import com.smallaswater.serverinfo.utils.RsNpcVariable;
 import com.smallaswater.serverinfo.utils.TipsVariable;
+import com.smallaswater.serverinfo.utils.VariableUpdateTask;
 import com.smallaswater.serverinfo.windows.CreateWindow;
 import lombok.Getter;
 import tip.utils.Api;
@@ -24,6 +25,7 @@ import tip.utils.Api;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -34,6 +36,10 @@ import java.util.concurrent.ThreadPoolExecutor;
  */
 public class ServerInfoMainClass extends PluginBase implements Listener {
 
+
+    public static final ThreadPoolExecutor THREAD_POOL = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+    public static final Random RANDOM = new Random();
+
     private static ServerInfoMainClass instance;
 
     private Config language;
@@ -41,82 +47,112 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
     @Getter
     private ArrayList<ServerInfo> serverInfos = new ArrayList<>();
 
-    public static final ThreadPoolExecutor THREAD_POOL = (ThreadPoolExecutor) Executors.newCachedThreadPool();
-
-    @Override
-    public void onEnable() {
-        instance = this;
-        saveDefaultConfig();
-        reloadConfig();
-        loadServer();
-        language = new Config(this.getDataFolder()+"/language.yml",Config.YAML);
-        this.getLogger().info("服务器信息加载完成");
-        THREAD_POOL.execute(new UpdateServerInfoRunnable());
-
-        this.getServer().getPluginManager().registerEvents(instance, instance);
-
-        //注册TIPS变量
-        try {
-            Class.forName("tip.utils.Api");
-            Api.registerVariables("serverInfo", TipsVariable.class);
-        } catch (Exception ignored) {
-
-        }
-        //注册RsNPCX变量
-        try {
-            Class.forName("com.smallaswater.npc.variable.BaseVariableV2");
-            com.smallaswater.npc.variable.VariableManage.addVariableV2("ServerInfoVariable", RsNpcXVariable.RsNpcXVariableV2.class);
-        }catch (Exception e) {
-            try {
-                Class.forName("com.smallaswater.npc.variable.VariableManage");
-                com.smallaswater.npc.variable.VariableManage.addVariable("ServerInfoVariable", RsNpcXVariable.class);
-            } catch (Exception ignored) {
-
-            }
-        }
-
-    }
-
-    public Config getLanguage() {
-        return language;
-    }
-
-    public int getAllPlayerSize(){
-        int maxOnline = 0;
-        for (ServerInfo info : ServerInfoMainClass.getInstance().getServerInfos()) {
-            if(info.onLine()) {
-                maxOnline += info.getPlayer();
-            }
-        }
-        return maxOnline;
-    }
-
-    public void call(String callback,String[] data){
-        for(ServerInfo info: serverInfos){
-            if(info.getCallback().equals(callback)){
-                info.update(data);
-            }
-        }
-
-    }
-
-    private void loadServer(){
-        this.serverInfos.clear();
-        for(Map map:getConfig().getMapList("server-info")){
-            ServerInfo info = new ServerInfo(map.get("name").toString(),map.get("ip").toString(),Integer.parseInt(map.get("port").toString()));
-            serverInfos.add(info);
-            this.getLogger().info("加载服务器 "+info.getCallback()+" 完成");
-        }
-    }
+    @Getter
+    private VariableUpdateTask variableUpdateTask;
 
     public static ServerInfoMainClass getInstance() {
         return instance;
     }
 
     @Override
+    public void onLoad() {
+        instance = this;
+    }
+
+    @Override
+    public void onEnable() {
+        this.saveDefaultConfig();
+        this.saveResource("language.yml");
+        this.saveResource("变量说明.txt", true);
+
+        this.reloadConfig();
+        this.language = new Config(this.getDataFolder() + "/language.yml", Config.YAML);
+
+        this.loadServer();
+
+        this.getLogger().info("服务器信息加载完成");
+
+        this.getServer().getScheduler().scheduleTask(this, () -> { //使用task在服务器启动完成后开始获取信息
+            THREAD_POOL.execute(new UpdateServerInfoRunnable());
+        });
+
+        this.getServer().getPluginManager().registerEvents(instance, instance);
+
+        boolean needVariableUpdate = false;
+        //注册TIPS变量
+        try {
+            Class.forName("tip.utils.Api");
+            Api.registerVariables("ServerInfoVariable", TipsVariable.class);
+            needVariableUpdate = true;
+        } catch (Exception ignored) {
+
+        }
+        //注册RsNPC变量
+        try {
+            Class.forName("com.smallaswater.npc.variable.BaseVariableV2");
+            com.smallaswater.npc.variable.VariableManage.addVariableV2("ServerInfoVariable", RsNpcVariable.class);
+            needVariableUpdate = true;
+        } catch (Exception ignored) {
+
+        }
+        //注册变量更新Task
+        if (needVariableUpdate) {
+            this.variableUpdateTask = new VariableUpdateTask(this);
+            this.getServer().getScheduler().scheduleRepeatingTask(this, this.variableUpdateTask, 100);
+        }
+    }
+
+    public Config getLanguage() {
+        return language;
+    }
+
+    public int getAllPlayerSize() {
+        int maxOnline = 0;
+        for (ServerInfo info : ServerInfoMainClass.getInstance().getServerInfos()) {
+            if (info.onLine()) {
+                maxOnline += info.getPlayer();
+            }
+        }
+        return maxOnline;
+    }
+
+    @Deprecated
+    public void call(String name, String[] data) {
+        for (ServerInfo info : serverInfos) {
+            if (info.getName().equals(name)) {
+                info.update(data);
+            }
+        }
+    }
+
+    private void loadServer() {
+        this.serverInfos.clear();
+        for (Map map : getConfig().getMapList("server-info")) {
+            ServerInfo info = new ServerInfo(
+                    map.get("name").toString(),
+                    map.getOrDefault("group", "default").toString(),
+                    map.get("ip").toString(),
+                    Integer.parseInt(map.get("port").toString())
+            );
+            serverInfos.add(info);
+            this.getLogger().info("加载服务器 " + info.getName() + " 完成");
+        }
+    }
+
+    public ArrayList<ServerInfo> getServerInfos(String group) {
+        ArrayList<ServerInfo> list = new ArrayList<>();
+        for (ServerInfo info : serverInfos) {
+            if (info.getGroup().equals(group)) {
+                list.add(info);
+            }
+        }
+        return list;
+    }
+
+    @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(args.length > 0){
-            if("reload".equalsIgnoreCase(args[0]) && sender.isOp()){
+        if (args.length > 0) {
+            if ("reload".equalsIgnoreCase(args[0]) && sender.isOp()) {
                 saveDefaultConfig();
                 reloadConfig();
                 loadServer();
@@ -124,7 +160,7 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
                 return true;
             }
         }
-        if(sender instanceof Player){
+        if (sender instanceof Player) {
             CreateWindow.showMenu((Player) sender);
             return true;
         }
@@ -139,19 +175,19 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
     }
 
     @EventHandler
-    public void onWindow(PlayerFormRespondedEvent event){
-        if(event.wasClosed() || event.getResponse() == null){
+    public void onWindow(PlayerFormRespondedEvent event) {
+        if (event.wasClosed() || event.getResponse() == null) {
             return;
         }
-        if(event.getFormID() == CreateWindow.MENU){
+        if (event.getFormID() == CreateWindow.MENU) {
             ServerInfo info = getServerInfos().get(
-                    ((FormResponseSimple)event.getResponse()).getClickedButtonId());
-            if(info.onLine()){
-                Server.getInstance().broadcastMessage(TextFormat.colorize('&',language.getString("player-transfer-text","").replace("{server}",info.getCallback()))
-                .replace("{name}",event.getPlayer().getName()));
-                event.getPlayer().transfer(new InetSocketAddress(info.getIp(),info.getPort()));
-            }else{
-                event.getPlayer().sendMessage(TextFormat.colorize('&',language.getString("player-transfer-off","")));
+                    ((FormResponseSimple) event.getResponse()).getClickedButtonId());
+            if (info.onLine()) {
+                Server.getInstance().broadcastMessage(TextFormat.colorize('&', language.getString("player-transfer-text").replace("{server}", info.getName()))
+                        .replace("{name}", event.getPlayer().getName()));
+                event.getPlayer().transfer(new InetSocketAddress(info.getIp(), info.getPort()));
+            } else {
+                event.getPlayer().sendMessage(TextFormat.colorize('&', language.getString("player-transfer-off")));
             }
         }
     }

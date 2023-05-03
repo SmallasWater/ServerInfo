@@ -1,0 +1,7 @@
+安装本插件后，可以在Tips和RsNPC中使用以下变量
+
+{ServerInfoPlayer} 所有服务器在线人数总数
+{ServerInfoPlayer@服务器名字} 指定服务器在线人数
+{ServerInfoMaxPlayer@服务器名字} 指定服务器最大人数
+{ServerInfoGroupPlayer@服务器组名字} 指定服务器组在线人数
+{ServerInfoGroupMaxPlayer@服务器组名字} 指定服务器组最大人数

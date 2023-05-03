@@ -1,23 +1,21 @@
 package com.smallaswater.serverinfo.utils;
 
 import cn.nukkit.Player;
+import com.smallaswater.npc.data.RsNpcConfig;
+import com.smallaswater.npc.variable.BaseVariableV2;
 import com.smallaswater.serverinfo.ServerInfoMainClass;
-import tip.utils.variables.BaseVariable;
 
 import java.util.Map;
 
 /**
- * @author SmallasWater
+ * @author lt_name
  */
-public class TipsVariable extends BaseVariable {
-    public TipsVariable(Player player) {
-        super(player);
-    }
+public class RsNpcVariable extends BaseVariableV2 {
 
     @Override
-    public void strReplace() {
+    public void onUpdate(Player player, RsNpcConfig rsNpcConfig) {
         for (Map.Entry<String, String> entry : ServerInfoMainClass.getInstance().getVariableUpdateTask().getVariables().entrySet()) {
-            this.addStrReplaceString(entry.getKey(), entry.getValue());
+            this.addVariable(entry.getKey(), entry.getValue());
         }
     }
 
