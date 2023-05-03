@@ -11,18 +11,20 @@ import java.net.InetAddress;
 import java.util.Arrays;
 
 /**
+ * 基于查询协议的服务器详细信息更新线程
+ *
  * @author LT_Name
  */
 public class DetailsUpdateRunnable implements Runnable {
 
     private static final int sessionId = ServerInfoMainClass.RANDOM.nextInt(1000);
 
-    private String callback;
+    private String name;
     private String host;
     private int port;
 
     DetailsUpdateRunnable(ServerInfo info) {
-        this.callback = info.getName();
+        this.name = info.getName();
         this.host = info.getIp();
         this.port = info.getPort();
     }
@@ -31,7 +33,7 @@ public class DetailsUpdateRunnable implements Runnable {
     public void run() {
         BinaryStream binaryStream;
         try {
-            //handshake
+            //handshake 握手包
             binaryStream = new BinaryStream();
             binaryStream.putByte((byte) 0xfe);
             binaryStream.putByte((byte) 0xfd);
@@ -40,47 +42,53 @@ public class DetailsUpdateRunnable implements Runnable {
             binaryStream.putByte((byte) 0);
             binaryStream = this.sendAndReceive(binaryStream);
             if (binaryStream.getByte() == QueryHandler.HANDSHAKE && binaryStream.getInt() == sessionId) {
-                //TODO 找出token错误的原因
-                byte[] token = Arrays.copyOf(binaryStream.getByteArray(), 4);
+                byte[] token = new byte[] {(byte) binaryStream.getByte(), (byte) binaryStream.getByte(), (byte) binaryStream.getByte(), (byte) binaryStream.getByte()};
 
-                ServerInfoMainClass.getInstance().getLogger().info("token: " + Arrays.toString(token));
-
+                //statistic 统计包
                 binaryStream = new BinaryStream();
                 binaryStream.putByte((byte) 0xfe);
                 binaryStream.putByte((byte) 0xfd);
                 binaryStream.putByte(QueryHandler.STATISTICS);
                 binaryStream.putInt(sessionId);
-                binaryStream.putByteArray(token);
+                for (byte t : token) {
+                    binaryStream.putByte(t);
+                }
+                //要求返回长数据类型 FF FF FF 01
+                binaryStream.putByte((byte) 0xff);
+                binaryStream.putByte((byte) 0xff);
+                binaryStream.putByte((byte) 0xff);
+                binaryStream.putByte((byte) 0x01);
 
                 binaryStream = this.sendAndReceive(binaryStream);
 
                 if (binaryStream.getByte() == QueryHandler.STATISTICS && binaryStream.getInt() == sessionId) {
-                    byte[] data = binaryStream.getByteArray();
-                    this.call(this.callback, data);
+                    this.call(this.name, binaryStream.get());
                 }
             }else {
-                this.call(this.callback, new String[0]);
+                this.call(this.name, new String[0]);
             }
         } catch (Throwable e) {
             e.printStackTrace();
-            this.call(this.callback, new String[0]);
+            this.call(this.name, new String[0]);
         }
     }
 
     public BinaryStream sendAndReceive(BinaryStream binaryStream) throws Exception {
         DatagramSocket socket = new DatagramSocket();
-        socket.setSoTimeout(5000);
-        DatagramPacket packet = new DatagramPacket(Arrays.copyOf(binaryStream.getBuffer(), 64), 64, InetAddress.getByName(this.host), this.port);
-        socket.send(packet);
-        socket.receive(packet);
-        BinaryStream stream = new BinaryStream(packet.getData());
-        socket.close();
-        return stream;
+        try {
+            socket.setSoTimeout(5000);
+            DatagramPacket packet = new DatagramPacket(Arrays.copyOf(binaryStream.getBuffer(), 64), 64, InetAddress.getByName(this.host), this.port);
+            socket.send(packet);
+            socket.receive(packet);
+            return new BinaryStream(packet.getData());
+        } finally {
+            socket.close();
+        }
     }
 
-    private void call(String callback, byte[] data) {
+    private void call(String name, byte[] data) {
         for (ServerInfo info : ServerInfoMainClass.getInstance().getServerInfos()) {
-            if (info.getName().equals(callback)) {
+            if (info.getName().equals(name)) {
                 info.update(data);
             }
         }
