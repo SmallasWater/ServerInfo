@@ -30,6 +30,9 @@ public class ServerInfo {
 
     private int maxPlayer;
 
+    private LinkedHashMap<String, String> kvData = new LinkedHashMap<>();
+
+    private ArrayList<String> players = new ArrayList<>();
 
     public ServerInfo(String name, String group, String ip, int port) {
         this.name = name;
@@ -56,20 +59,34 @@ public class ServerInfo {
         }
         BinaryStream binaryStream = new BinaryStream(data);
 
-        //TODO 对读取到的数据进行检查
-        getSubData(binaryStream); //splitnum
-        binaryStream.getByte(); //128
-        binaryStream.getByte(); //0x00
+        if (!"splitnum".equals(getSubData(binaryStream))) {
+            return;
+        }
+        if (binaryStream.getByte() != 128) {
+            return;
+        };
+        if (binaryStream.getByte() != 0x00) {
+            return;
+        }
 
         LinkedHashMap<String, String> kvData = new LinkedHashMap<>();
         for (int i = 0; i < 12; i++) {
             kvData.put(getSubData(binaryStream), getSubData(binaryStream));
         }
+        this.kvData = kvData;
 
-        binaryStream.getByte(); //0x00
-        binaryStream.getByte(); //0x01
-        getSubData(binaryStream);//player_
-        binaryStream.getByte(); //0x00
+        if (binaryStream.getByte() != 0x00) {
+            return;
+        };
+        if (binaryStream.getByte() != 0x01) {
+            return;
+        }
+        if (!"player_".equals(getSubData(binaryStream))) {
+            return;
+        }
+        if (binaryStream.getByte() != 0x00) {
+            return;
+        }
 
         ArrayList<String> players = new ArrayList<>();
         while (true) {
@@ -78,6 +95,14 @@ public class ServerInfo {
                 break;
             }
             players.add(playerName);
+        }
+        this.players = players;
+
+        this.maxPlayer = Integer.parseInt(kvData.getOrDefault("maxplayers", String.valueOf(-1)));
+        if (this.maxPlayer == -1) {
+            this.player = -1;
+        } else {
+            this.player = this.players.size();
         }
     }
 

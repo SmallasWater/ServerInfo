@@ -19,9 +19,9 @@ public class DetailsUpdateRunnable implements Runnable {
 
     private static final int sessionId = ServerInfoMainClass.RANDOM.nextInt(1000);
 
-    private String name;
-    private String host;
-    private int port;
+    private final String name;
+    private final String host;
+    private final int port;
 
     DetailsUpdateRunnable(ServerInfo info) {
         this.name = info.getName();
@@ -65,11 +65,10 @@ public class DetailsUpdateRunnable implements Runnable {
                     this.call(this.name, binaryStream.get());
                 }
             }else {
-                this.call(this.name, new String[0]);
+                this.call(this.name, new byte[0]);
             }
         } catch (Throwable e) {
-            e.printStackTrace();
-            this.call(this.name, new String[0]);
+            this.call(this.name, new byte[0]);
         }
     }
 
@@ -77,9 +76,10 @@ public class DetailsUpdateRunnable implements Runnable {
         DatagramSocket socket = new DatagramSocket();
         try {
             socket.setSoTimeout(5000);
+            //19个字节 nk解析完后会剩余8个字节，使其返回长数据类型
             DatagramPacket packet = new DatagramPacket(Arrays.copyOf(binaryStream.getBuffer(), 19), 19, InetAddress.getByName(this.host), this.port);
             socket.send(packet);
-            packet = new DatagramPacket(Arrays.copyOf(new byte[0], 2048), 2048, InetAddress.getByName(this.host), this.port); //接受数据时重新声明长度
+            packet = new DatagramPacket(new byte[2048], 2048, InetAddress.getByName(this.host), this.port); //接受数据时重新声明长度
             socket.receive(packet);
             return new BinaryStream(packet.getData());
         } finally {
@@ -90,14 +90,6 @@ public class DetailsUpdateRunnable implements Runnable {
     private void call(String name, byte[] data) {
         for (ServerInfo info : ServerInfoMainClass.getInstance().getServerInfos()) {
             if (info.getName().equals(name)) {
-                info.update(data);
-            }
-        }
-    }
-
-    private void call(String callback, String[] data) {
-        for (ServerInfo info : ServerInfoMainClass.getInstance().getServerInfos()) {
-            if (info.getName().equals(callback)) {
                 info.update(data);
             }
         }
