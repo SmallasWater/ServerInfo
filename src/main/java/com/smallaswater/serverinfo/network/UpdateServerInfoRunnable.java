@@ -16,7 +16,12 @@ public class UpdateServerInfoRunnable implements Runnable {
     public void run() {
         while (ServerInfoMainClass.getInstance().isEnabled()) {
             for (ServerInfo info : ServerInfoMainClass.getInstance().getServerInfos()) {
-                ServerInfoMainClass.THREAD_POOL.execute(new SimpleUpdateRunnable(info));
+                if (ServerInfoMainClass.getInstance().isSyncPlayer()) {
+                    ServerInfoMainClass.THREAD_POOL.execute(new DetailsUpdateRunnable(info));
+                } else {
+                    ServerInfoMainClass.THREAD_POOL.execute(new SimpleUpdateRunnable(info));
+                }
+
             }
 
             try {

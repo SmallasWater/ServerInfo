@@ -45,6 +45,9 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
     private Config language;
 
     @Getter
+    private boolean syncPlayer;
+
+    @Getter
     private ArrayList<ServerInfo> serverInfos = new ArrayList<>();
 
     @Getter
@@ -67,6 +70,7 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
 
         this.reloadConfig();
         this.language = new Config(this.getDataFolder() + "/language.yml", Config.YAML);
+        this.syncPlayer = this.getConfig().getBoolean("sync-player", false);
 
         this.loadServer();
 
@@ -169,7 +173,7 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
 
     @EventHandler
     public void onQueryRegenerateEvent(QueryRegenerateEvent event) {
-        if (getConfig().getBoolean("sync-player", false)) {
+        if (this.syncPlayer) {
             event.setPlayerCount(Server.getInstance().getOnlinePlayers().size() + getAllPlayerSize());
         }
     }
