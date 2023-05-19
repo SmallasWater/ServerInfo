@@ -1,0 +1,7 @@
+server-info: "服务器列表"
+sync-player: "在MOTD显示所有服务器的玩家数量总数"
+ServerCloseTransfer: "本服务器关闭时传送到指定服务器"
+ServerCloseTransfer.enable: "是否启用"
+ServerCloseTransfer.showTitle: "提示内容"
+ServerCloseTransfer.ip: "目标服务器IP"
+ServerCloseTransfer.port: "目标服务器端口"

@@ -1,5 +1,6 @@
 package com.smallaswater.serverinfo;
 
+import cn.lanink.gamecore.utils.ConfigUtils;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.command.Command;
@@ -53,6 +54,9 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
     @Getter
     private VariableUpdateTask variableUpdateTask;
 
+    @Getter
+    private boolean hasGameCore = false;
+
     public static ServerInfoMainClass getInstance() {
         return instance;
     }
@@ -64,6 +68,12 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
 
     @Override
     public void onEnable() {
+        try {
+            Class.forName("cn.lanink.gamecore.GameCore");
+            this.hasGameCore = true;
+        } catch (Exception ignored) {
+
+        }
         this.saveDefaultConfig();
         this.saveResource("language.yml");
         this.saveResource("变量说明.txt", true);
@@ -71,6 +81,12 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
         this.reloadConfig();
         this.language = new Config(this.getDataFolder() + "/language.yml", Config.YAML);
         this.syncPlayer = this.getConfig().getBoolean("sync-player", false);
+
+        if (this.hasGameCore) {
+            Config configDescription = new Config();
+            configDescription.load(this.getResource("ConfigDescription.yml"));
+            ConfigUtils.addDescription(this.getConfig(), configDescription);
+        }
 
         this.loadServer();
 
@@ -113,6 +129,16 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
     public int getAllPlayerSize() {
         int maxOnline = 0;
         for (ServerInfo info : ServerInfoMainClass.getInstance().getServerInfos()) {
+            if (info.onLine()) {
+                maxOnline += info.getPlayer();
+            }
+        }
+        return maxOnline;
+    }
+
+    public int getAllPlayerSize(String group) {
+        int maxOnline = 0;
+        for (ServerInfo info : this.getServerInfos(group)) {
             if (info.onLine()) {
                 maxOnline += info.getPlayer();
             }
@@ -184,8 +210,12 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
             return;
         }
         if (event.getFormID() == CreateWindow.MENU) {
-            ServerInfo info = getServerInfos().get(
-                    ((FormResponseSimple) event.getResponse()).getClickedButtonId());
+            int clickedButtonId = ((FormResponseSimple) event.getResponse()).getClickedButtonId();
+            if (clickedButtonId >= getServerInfos().size()) {
+                CreateWindow.showAdminMain(event.getPlayer());
+                return;
+            }
+            ServerInfo info = getServerInfos().get(clickedButtonId);
             if (info.onLine()) {
                 Server.getInstance().broadcastMessage(TextFormat.colorize('&', language.getString("player-transfer-text").replace("{server}", info.getName()))
                         .replace("{name}", event.getPlayer().getName()));
