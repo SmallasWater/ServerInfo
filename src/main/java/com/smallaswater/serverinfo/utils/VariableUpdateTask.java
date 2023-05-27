@@ -37,9 +37,11 @@ public class VariableUpdateTask extends PluginTask<ServerInfoMainClass> {
                     groupMaxPlayer.put(info.getGroup(), 0);
                 }
                 groupMaxPlayer.put(info.getGroup(), groupMaxPlayer.get(info.getGroup()) + info.getMaxPlayer());
-            }else {
+            } else {
                 this.addVariable("{ServerInfoPlayer@" + info.getName() + "}", "服务器离线");
                 this.addVariable("{ServerInfoMaxPlayer@" + info.getName() + "}", "服务器离线");
+                this.addVariable("{ServerInfoGroupPlayer@" + info.getGroup() + "}", "服务器离线");
+                this.addVariable("{ServerInfoGroupMaxPlayer@" + info.getGroup() + "}", "服务器离线");
             }
         }
         for (Map.Entry<String, Integer> entry : groupPlayer.entrySet()) {
