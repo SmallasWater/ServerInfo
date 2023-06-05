@@ -127,7 +127,7 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
     }
 
     public int getAllPlayerSize() {
-        int maxOnline = 0;
+        int maxOnline = this.getServer().getOnlinePlayers().size();
         for (ServerInfo info : ServerInfoMainClass.getInstance().getServerInfos()) {
             if (info.onLine()) {
                 maxOnline += info.getPlayer();
@@ -200,7 +200,7 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
     @EventHandler
     public void onQueryRegenerateEvent(QueryRegenerateEvent event) {
         if (this.syncPlayer) {
-            event.setPlayerCount(Server.getInstance().getOnlinePlayers().size() + getAllPlayerSize());
+            event.setPlayerCount(this.getAllPlayerSize());
         }
     }
 
