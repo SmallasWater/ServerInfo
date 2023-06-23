@@ -1,14 +1,13 @@
-# 改配置写服务器
+# 服务器列表
 server-info:
   - name: "测试服务器 #1"
     group: "测试服务器组"
     ip: "127.0.0.1"
     port: 19132
 
-# 使用说明:
-# 开启此选项千万不要将开启这个选项的服务器
-# 写入 server-info
+# 在MOTD显示所有服务器的玩家数量总数
 sync-player: false
+
 #服务器关闭时传送到其他服务器
 ServerCloseTransfer:
   enable: false

@@ -25,8 +25,10 @@ import tip.utils.Api;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -49,7 +51,7 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
     private boolean syncPlayer;
 
     @Getter
-    private ArrayList<ServerInfo> serverInfos = new ArrayList<>();
+    private List<ServerInfo> serverInfos = new CopyOnWriteArrayList<>();
 
     @Getter
     private VariableUpdateTask variableUpdateTask;
@@ -118,7 +120,7 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
         //注册变量更新Task
         if (needVariableUpdate) {
             this.variableUpdateTask = new VariableUpdateTask(this);
-            this.getServer().getScheduler().scheduleRepeatingTask(this, this.variableUpdateTask, 100);
+            this.getServer().getScheduler().scheduleRepeatingTask(this, this.variableUpdateTask, 100, true);
         }
     }
 

@@ -2,6 +2,8 @@ menu-title: "跨服菜单"
 menu-text: "总在线: {sum}"
 
 menu-admin: "管理服务器列表"
+menu-admin-button-addServer: "添加服务器"
+menu-admin-button-removeServer: "删除服务器"
 menu-adminAddServer: "添加新服务器"
 menu-adminAddServer-name: "服务器名称"
 menu-adminAddServer-group: "服务器组"

@@ -52,11 +52,11 @@ public class CreateWindow {
     }
 
     public static void showAdminMain(@NotNull Player player) {
-        AdvancedFormWindowSimple simple = new AdvancedFormWindowSimple(TextFormat.colorize('&', ServerInfoMainClass.getInstance().getLanguage().getString("menu-admin")));
+        Config language = ServerInfoMainClass.getInstance().getLanguage();
+        AdvancedFormWindowSimple simple = new AdvancedFormWindowSimple(TextFormat.colorize('&', language.getString("menu-admin")));
 
-        simple.addButton("添加服务器", CreateWindow::showAdminAddServer);
-        simple.addButton("编辑服务器", (cp) -> {});
-        simple.addButton("删除服务器", CreateWindow::showAdminRemoveServer);
+        simple.addButton(TextFormat.colorize('&', language.getString("menu-admin-button-addServer")), CreateWindow::showAdminAddServer);
+        simple.addButton(TextFormat.colorize('&', language.getString("menu-admin-button-removeServer")), CreateWindow::showAdminRemoveServer);
 
         player.showFormWindow(simple);
     }
@@ -113,15 +113,16 @@ public class CreateWindow {
         });
         custom.onClosed(CreateWindow::showAdminMain);
 
-        player.showFormWindow(custom);
+        custom.showToPlayer(player);
     }
-
 
     public static void showAdminRemoveServer(@NotNull Player player) {
         Config language = ServerInfoMainClass.getInstance().getLanguage();
-        AdvancedFormWindowSimple simple = new AdvancedFormWindowSimple(TextFormat.colorize('&', language.getString("menu-adminRemoveServer")));
+        String title = TextFormat.colorize('&', language.getString("menu-adminRemoveServer"));
+        AdvancedFormWindowSimple simple = new AdvancedFormWindowSimple(title, title);
+
         for (ServerInfo info : ServerInfoMainClass.getInstance().getServerInfos()) {
-            simple.addButton(TextFormat.colorize('&', info.toButtonText()), (cp) -> {
+            simple.addButton(TextFormat.colorize('&', info.getName()), (cp) -> {
                 String text = TextFormat.colorize('&', language.getString("menu-adminRemoveServer-confirm").replace("{server}", info.getName()));
                 AdvancedFormWindowModal modal = new AdvancedFormWindowModal(
                         text, text,
@@ -149,7 +150,8 @@ public class CreateWindow {
                 cp.showFormWindow(modal);
             });
         }
-        player.showFormWindow(simple);
+
+        simple.showToPlayer(player);
     }
 
     private static void sendTipReturnMenu(Player player, String text, Consumer<Player> consumer) {
