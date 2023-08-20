@@ -5,6 +5,9 @@ server-info:
     ip: "127.0.0.1"
     port: 19132
 
+# 服务器信息更新方式 可选: Simple, Details
+UpdateInfoProvide: "Simple"
+
 # 在MOTD显示所有服务器的玩家数量总数
 sync-player: false
 

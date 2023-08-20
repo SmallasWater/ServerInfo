@@ -43,6 +43,7 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
     public static final ThreadPoolExecutor THREAD_POOL = (ThreadPoolExecutor) Executors.newCachedThreadPool();
     public static final Random RANDOM = new Random();
 
+    @Getter
     private static ServerInfoMainClass instance;
 
     private Config language;
@@ -58,10 +59,6 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
 
     @Getter
     private boolean hasGameCore = false;
-
-    public static ServerInfoMainClass getInstance() {
-        return instance;
-    }
 
     @Override
     public void onLoad() {

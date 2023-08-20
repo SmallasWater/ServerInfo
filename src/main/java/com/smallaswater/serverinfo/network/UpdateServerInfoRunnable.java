@@ -12,11 +12,17 @@ import com.smallaswater.serverinfo.servers.ServerInfo;
  */
 public class UpdateServerInfoRunnable implements Runnable {
 
+    private final boolean useDetails;
+
+    public UpdateServerInfoRunnable() {
+        this.useDetails = "Details".equalsIgnoreCase(ServerInfoMainClass.getInstance().getConfig().getString("UpdateInfoProvide"));
+    }
+
     @Override
     public void run() {
         while (ServerInfoMainClass.getInstance().isEnabled()) {
             for (ServerInfo info : ServerInfoMainClass.getInstance().getServerInfos()) {
-                if (ServerInfoMainClass.getInstance().isSyncPlayer()) {
+                if (this.useDetails) {
                     ServerInfoMainClass.THREAD_POOL.execute(new DetailsUpdateRunnable(info));
                 } else {
                     ServerInfoMainClass.THREAD_POOL.execute(new SimpleUpdateRunnable(info));

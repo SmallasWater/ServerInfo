@@ -1,4 +1,5 @@
 server-info: "服务器列表"
+UpdateInfoProvide: "服务器信息更新方式 可选: Simple, Details"
 sync-player: "在MOTD显示所有服务器的玩家数量总数"
 ServerCloseTransfer: "本服务器关闭时传送到指定服务器"
 ServerCloseTransfer.enable: "是否启用"

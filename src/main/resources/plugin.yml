@@ -1,6 +1,6 @@
 name: ServerInfo
 main: com.smallaswater.serverinfo.ServerInfoMainClass
-version: 1.0.9
+version: 1.0.10-SNAPSHOT
 api: 1.0.11
 load: POSTWORLD
 commands:
