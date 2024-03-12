@@ -30,7 +30,9 @@ public class VariableUpdateTask extends PluginTask<ServerInfoMainClass> {
         HashMap<String, Integer> groupMaxPlayer = new HashMap<>();
         for (ServerInfo info : ServerInfoMainClass.getInstance().getServerInfos()) {
             if (info.onLine()) {
-                this.addVariable("{ServerInfoPlayer@" + info.getName() + "}", String.valueOf(info.getPlayer()));
+                this.addVariable("{ServerInfoPlayer@" + info.getName() + "}", (TextFormat.colorize('&', language.getString("server-status-online")
+                    .replace("{player}", String.valueOf(info.getPlayer()))
+                )));
                 this.addVariable("{ServerInfoMaxPlayer@" + info.getName() + "}", String.valueOf(info.getMaxPlayer()));
                 if (!groupPlayer.containsKey(info.getGroup())) {
                     groupPlayer.put(info.getGroup(), 0);
@@ -48,7 +50,8 @@ public class VariableUpdateTask extends PluginTask<ServerInfoMainClass> {
             }
         }
         for (Map.Entry<String, Integer> entry : groupPlayer.entrySet()) {
-            this.addVariable("{ServerInfoGroupPlayer@" + entry.getKey() + "}", String.valueOf(entry.getValue()));
+            this.addVariable("{ServerInfoGroupPlayer@" + entry.getKey() + "}", (TextFormat.colorize('&', language.getString("server-status-online")
+            .replace("{player}", String.valueOf(entry.getValue())))));
         }
         for (Map.Entry<String, Integer> entry : groupMaxPlayer.entrySet()) {
             this.addVariable("{ServerInfoGroupMaxPlayer@" + entry.getKey() + "}", String.valueOf(entry.getValue()));
