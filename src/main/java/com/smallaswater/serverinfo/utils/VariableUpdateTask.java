@@ -3,6 +3,8 @@ package com.smallaswater.serverinfo.utils;
 import cn.nukkit.scheduler.PluginTask;
 import com.smallaswater.serverinfo.ServerInfoMainClass;
 import com.smallaswater.serverinfo.servers.ServerInfo;
+import cn.nukkit.utils.Config;
+import cn.nukkit.utils.TextFormat;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +24,7 @@ public class VariableUpdateTask extends PluginTask<ServerInfoMainClass> {
     @Override
     public void onRun(int i) {
         this.variables.clear();
+        Config language = ServerInfoMainClass.getInstance().getLanguage();
 
         HashMap<String, Integer> groupPlayer = new HashMap<>();
         HashMap<String, Integer> groupMaxPlayer = new HashMap<>();
@@ -38,10 +41,10 @@ public class VariableUpdateTask extends PluginTask<ServerInfoMainClass> {
                 }
                 groupMaxPlayer.put(info.getGroup(), groupMaxPlayer.get(info.getGroup()) + info.getMaxPlayer());
             } else {
-                this.addVariable("{ServerInfoPlayer@" + info.getName() + "}", "服务器离线");
-                this.addVariable("{ServerInfoMaxPlayer@" + info.getName() + "}", "服务器离线");
-                this.addVariable("{ServerInfoGroupPlayer@" + info.getGroup() + "}", "服务器离线");
-                this.addVariable("{ServerInfoGroupMaxPlayer@" + info.getGroup() + "}", "服务器离线");
+                this.addVariable("{ServerInfoPlayer@" + info.getName() + "}", (TextFormat.colorize('&', language.getString("server-status-offline"))));
+                this.addVariable("{ServerInfoMaxPlayer@" + info.getName() + "}", (TextFormat.colorize('&', language.getString("server-status-offline"))));
+                this.addVariable("{ServerInfoGroupPlayer@" + info.getGroup() + "}", (TextFormat.colorize('&', language.getString("server-status-offline"))));
+                this.addVariable("{ServerInfoGroupMaxPlayer@" + info.getGroup() + "}", (TextFormat.colorize('&', language.getString("server-status-offline"))));
             }
         }
         for (Map.Entry<String, Integer> entry : groupPlayer.entrySet()) {
