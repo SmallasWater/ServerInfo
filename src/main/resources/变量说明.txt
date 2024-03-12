@@ -5,3 +5,5 @@
 {ServerInfoMaxPlayer@服务器名字} 指定服务器最大人数
 {ServerInfoGroupPlayer@服务器组名字} 指定服务器组在线人数
 {ServerInfoGroupMaxPlayer@服务器组名字} 指定服务器组最大人数
+{ServerInfoPlayerAll@服务器名字} 指定服务器在线人数和最大人数
+{ServerInfoGroupPlayerAll@服务器组名字} 指定服务器组在线人数和最大人数

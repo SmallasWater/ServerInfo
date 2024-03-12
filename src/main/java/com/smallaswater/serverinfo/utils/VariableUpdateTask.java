@@ -34,6 +34,9 @@ public class VariableUpdateTask extends PluginTask<ServerInfoMainClass> {
                     .replace("{player}", String.valueOf(info.getPlayer()))
                 )));
                 this.addVariable("{ServerInfoMaxPlayer@" + info.getName() + "}", String.valueOf(info.getMaxPlayer()));
+                this.addVariable("{ServerInfoPlayerAll@" + info.getName() + "}", (TextFormat.colorize('&', language.getString("server-status-online2")
+                    .replace("{player}", String.valueOf(info.getPlayer())).replace("{maxplayer}", String.valueOf(info.getMaxPlayer()))
+                )));                
                 if (!groupPlayer.containsKey(info.getGroup())) {
                     groupPlayer.put(info.getGroup(), 0);
                 }
@@ -43,10 +46,13 @@ public class VariableUpdateTask extends PluginTask<ServerInfoMainClass> {
                 }
                 groupMaxPlayer.put(info.getGroup(), groupMaxPlayer.get(info.getGroup()) + info.getMaxPlayer());
             } else {
-                this.addVariable("{ServerInfoPlayer@" + info.getName() + "}", (TextFormat.colorize('&', language.getString("server-status-offline"))));
-                this.addVariable("{ServerInfoMaxPlayer@" + info.getName() + "}", (TextFormat.colorize('&', language.getString("server-status-offline"))));
-                this.addVariable("{ServerInfoGroupPlayer@" + info.getGroup() + "}", (TextFormat.colorize('&', language.getString("server-status-offline"))));
-                this.addVariable("{ServerInfoGroupMaxPlayer@" + info.getGroup() + "}", (TextFormat.colorize('&', language.getString("server-status-offline"))));
+                String serverOffline = TextFormat.colorize('&', language.getString("server-status-offline"));
+                this.addVariable("{ServerInfoPlayer@" + info.getName() + "}", serverOffline);
+                this.addVariable("{ServerInfoMaxPlayer@" + info.getName() + "}", serverOffline);
+                this.addVariable("{ServerInfoGroupPlayer@" + info.getGroup() + "}", serverOffline);
+                this.addVariable("{ServerInfoGroupMaxPlayer@" + info.getGroup() + "}", serverOffline);
+                this.addVariable("{ServerInfoPlayerAll@" + info.getName() + "}", serverOffline);
+                this.addVariable("{ServerInfoGroupPlayerAll@" + info.getName() + "}", serverOffline);
             }
         }
         for (Map.Entry<String, Integer> entry : groupPlayer.entrySet()) {
@@ -56,6 +62,12 @@ public class VariableUpdateTask extends PluginTask<ServerInfoMainClass> {
         for (Map.Entry<String, Integer> entry : groupMaxPlayer.entrySet()) {
             this.addVariable("{ServerInfoGroupMaxPlayer@" + entry.getKey() + "}", String.valueOf(entry.getValue()));
         }
+        for (Map.Entry<String, Integer> entry : groupPlayer.entrySet()) {
+            for (Map.Entry<String, Integer> entry2 : groupMaxPlayer.entrySet()) {
+            this.addVariable("{ServerInfoGroupPlayerAll@" + entry.getKey() + "}", (TextFormat.colorize('&', language.getString("server-status-online2")
+                .replace("{player}", String.valueOf(entry.getValue())).replace("{maxplayer}", String.valueOf(entry2.getValue()))
+            )));
+        }}
         this.addVariable("{ServerInfoPlayer}", String.valueOf(ServerInfoMainClass.getInstance().getAllPlayerSize()));
     }
 
