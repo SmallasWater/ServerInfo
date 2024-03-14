@@ -52,7 +52,7 @@ public class VariableUpdateTask extends PluginTask<ServerInfoMainClass> {
                 this.addVariable("{ServerInfoGroupPlayer@" + info.getGroup() + "}", serverOffline);
                 this.addVariable("{ServerInfoGroupMaxPlayer@" + info.getGroup() + "}", serverOffline);
                 this.addVariable("{ServerInfoPlayerAll@" + info.getName() + "}", serverOffline);
-                this.addVariable("{ServerInfoGroupPlayerAll@" + info.getName() + "}", serverOffline);
+                this.addVariable("{ServerInfoGroupPlayerAll@" + info.getGroup() + "}", serverOffline);
             }
         }
         for (Map.Entry<String, Integer> entry : groupPlayer.entrySet()) {
