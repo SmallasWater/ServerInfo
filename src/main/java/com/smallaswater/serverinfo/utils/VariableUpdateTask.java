@@ -36,7 +36,7 @@ public class VariableUpdateTask extends PluginTask<ServerInfoMainClass> {
                 this.addVariable("{ServerInfoMaxPlayer@" + info.getName() + "}", String.valueOf(info.getMaxPlayer()));
                 this.addVariable("{ServerInfoPlayerAll@" + info.getName() + "}", (TextFormat.colorize('&', language.getString("server-status-online2")
                     .replace("{player}", String.valueOf(info.getPlayer())).replace("{maxplayer}", String.valueOf(info.getMaxPlayer()))
-                )));                
+                )));
                 if (!groupPlayer.containsKey(info.getGroup())) {
                     groupPlayer.put(info.getGroup(), 0);
                 }

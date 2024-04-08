@@ -24,6 +24,6 @@ button-text-offline: "{server}\n &e服务器离线"
 player-transfer-text: "&e玩家 &a{name} &e前往了 &r{server} &e服务器"
 player-transfer-off: "&e[&f跨服&e] 服务器离线"
 
-server-status-online: "§a游玩人数 {player}"
+server-status-online: "&a游玩人数 {player}"
 server-status-online2: "&a{player} &7/&a {maxplayer}"
-server-status-offline: "§c服务器离线"
+server-status-offline: "&c服务器离线"
