@@ -62,12 +62,14 @@ public class VariableUpdateTask extends PluginTask<ServerInfoMainClass> {
         for (Map.Entry<String, Integer> entry : groupMaxPlayer.entrySet()) {
             this.addVariable("{ServerInfoGroupMaxPlayer@" + entry.getKey() + "}", String.valueOf(entry.getValue()));
         }
-        for (Map.Entry<String, Integer> entry : groupPlayer.entrySet()) {
-            for (Map.Entry<String, Integer> entry2 : groupMaxPlayer.entrySet()) {
-            this.addVariable("{ServerInfoGroupPlayerAll@" + entry.getKey() + "}", (TextFormat.colorize('&', language.getString("server-status-online2")
-                .replace("{player}", String.valueOf(entry.getValue())).replace("{maxplayer}", String.valueOf(entry2.getValue()))
-            )));
-        }}
+        for (String key : groupPlayer.keySet()) {
+            String players = String.valueOf(groupPlayer.get(key));
+            String maxPlayers = String.valueOf(groupMaxPlayer.get(key));
+            String formattedString = TextFormat.colorize('&', language.getString("server-status-online2")
+            .replace("{player}", players)
+            .replace("{maxplayer}", maxPlayers));
+            this.addVariable("{ServerInfoGroupPlayerAll@" + key + "}", formattedString);
+        }
         this.addVariable("{ServerInfoPlayer}", String.valueOf(ServerInfoMainClass.getInstance().getAllPlayerSize()));
     }
 
