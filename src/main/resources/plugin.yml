@@ -3,6 +3,9 @@ main: com.smallaswater.serverinfo.ServerInfoMainClass
 version: 1.0.10-SNAPSHOT
 api: 1.0.11
 load: POSTWORLD
+softdepend:
+  - "MemoriesOfTime-GameCore"
+
 commands:
   trs:
     description: 显示跨服服务器GUI

@@ -140,11 +140,21 @@ public class ServerInfo {
         return player != -1;
     }
 
+    /**
+     * @return 服务器是否满员
+     */
+    public boolean isFull() {
+        return player >= maxPlayer;
+    }
+
     public String toButtonText() {
         if (onLine()) {
+            if (isFull()) {
+                return ServerInfoMainClass.getInstance().getLanguage().getString("button-text-full", "")
+                        .replace("{server}", name).replace("{player}", player + "").replace("{maxplayer}", maxPlayer + "");
+            }
             return ServerInfoMainClass.getInstance().getLanguage().getString("button-text-online", "")
                     .replace("{server}", name).replace("{player}", player + "").replace("{maxplayer}", maxPlayer + "");
-//            return callback+"\n&e"+player+" &7/&6 "+maxPlayer+"  &a在线";
         } else {
             return ServerInfoMainClass.getInstance().getLanguage().getString("button-text-offline", "")
                     .replace("{server}", name);

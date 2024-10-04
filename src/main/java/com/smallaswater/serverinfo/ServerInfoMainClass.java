@@ -216,6 +216,10 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
             }
             ServerInfo info = getServerInfos().get(clickedButtonId);
             if (info.onLine()) {
+                if (info.isFull()) {
+                    event.getPlayer().sendMessage(TextFormat.colorize('&', language.getString("player-transfer-full")));
+                    return;
+                }
                 Server.getInstance().broadcastMessage(TextFormat.colorize('&', language.getString("player-transfer-text").replace("{server}", info.getName()))
                         .replace("{name}", event.getPlayer().getName()));
                 event.getPlayer().transfer(new InetSocketAddress(info.getIp(), info.getPort()));
