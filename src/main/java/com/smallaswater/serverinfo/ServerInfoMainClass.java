@@ -19,6 +19,7 @@ import com.smallaswater.serverinfo.servers.ServerInfo;
 import com.smallaswater.serverinfo.utils.RsNpcVariable;
 import com.smallaswater.serverinfo.utils.TipsVariable;
 import com.smallaswater.serverinfo.utils.VariableUpdateTask;
+import com.smallaswater.serverinfo.windows.CreateAdminWindow;
 import com.smallaswater.serverinfo.windows.CreateWindow;
 import lombok.Getter;
 import tip.utils.Api;
@@ -211,7 +212,7 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
         if (event.getFormID() == CreateWindow.MENU) {
             int clickedButtonId = ((FormResponseSimple) event.getResponse()).getClickedButtonId();
             if (clickedButtonId >= getServerInfos().size()) {
-                CreateWindow.showAdminMain(event.getPlayer());
+                CreateAdminWindow.showAdminMain(event.getPlayer());
                 return;
             }
             ServerInfo info = getServerInfos().get(clickedButtonId);
