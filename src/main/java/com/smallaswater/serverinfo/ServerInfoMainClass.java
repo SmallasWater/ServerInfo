@@ -75,16 +75,17 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
 
         }
         this.saveDefaultConfig();
-        this.saveResource("language.yml");
         this.saveResource("变量说明.txt", true);
 
         this.reloadConfig();
-        this.language = new Config(this.getDataFolder() + "/language.yml", Config.YAML);
+        this.language = new Config();
+        this.language.load(this.getResource("Language/chs/language.yml"));
+
         this.syncPlayer = this.getConfig().getBoolean("sync-player", false);
 
         if (this.hasGameCore) {
             Config configDescription = new Config();
-            configDescription.load(this.getResource("ConfigDescription.yml"));
+            configDescription.load(this.getResource("Language/chs/ConfigDescription.yml"));
             ConfigUtils.addDescription(this.getConfig(), configDescription);
         }
 
