@@ -37,18 +37,18 @@ public class DetailsUpdateRunnable implements Runnable {
             binaryStream = new BinaryStream();
             binaryStream.putByte((byte) 0xfe);
             binaryStream.putByte((byte) 0xfd);
-            binaryStream.putByte(QueryHandler.HANDSHAKE);
+            binaryStream.putByte(/*QueryHandler.HANDSHAKE*/ (byte) 0x09);
             binaryStream.putInt(sessionId);
             binaryStream.putByte((byte) 0);
             binaryStream = this.sendAndReceive(binaryStream);
-            if (binaryStream.getByte() == QueryHandler.HANDSHAKE && binaryStream.getInt() == sessionId) {
+            if (binaryStream.getByte() == (byte) 0x09 && binaryStream.getInt() == sessionId) {
                 byte[] token = new byte[] {(byte) binaryStream.getByte(), (byte) binaryStream.getByte(), (byte) binaryStream.getByte(), (byte) binaryStream.getByte()};
 
                 //statistic 统计包
                 binaryStream = new BinaryStream();
                 binaryStream.putByte((byte) 0xfe);
                 binaryStream.putByte((byte) 0xfd);
-                binaryStream.putByte(QueryHandler.STATISTICS);
+                binaryStream.putByte(/*QueryHandler.STATISTICS*/ (byte) 0x00);
                 binaryStream.putInt(sessionId);
                 for (byte t : token) {
                     binaryStream.putByte(t);
@@ -61,7 +61,7 @@ public class DetailsUpdateRunnable implements Runnable {
 
                 binaryStream = this.sendAndReceive(binaryStream);
 
-                if (binaryStream.getByte() == QueryHandler.STATISTICS && binaryStream.getInt() == sessionId) {
+                if (binaryStream.getByte() == (byte) 0x00 && binaryStream.getInt() == sessionId) {
                     this.call(this.name, binaryStream.get());
                 }
             }else {
