@@ -19,7 +19,7 @@ menu-button-confirm: "确认"
 menu-button-return: "返回"
 menu-button-close: "关闭"
 
-button-text-online: "{server}\n &e{player} &7/&6 {maxplayer}  &a在线"
+button-text-online: "{server}\n &e{player} &7/&6 {maxplayer}  &a在线 版本: {version}"
 button-text-full: "{server}\n &e{player} &7/&6 {maxplayer}  &a已满"
 button-text-offline: "{server}\n &e服务器离线"
 player-transfer-text: "&e玩家 &a{name} &e前往了 &r{server} &e服务器"

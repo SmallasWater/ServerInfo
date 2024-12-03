@@ -25,6 +25,14 @@ public class ServerInfo {
     private String ip;
 
     private int port;
+    /**
+     * 服务器的协议版本
+     */
+    private int protocol = -1;
+    /**
+     * 服务器的版本信息
+     */
+    private String version;
 
     private int player;
 
@@ -88,6 +96,8 @@ public class ServerInfo {
             return;
         }
 
+        this.version = kvData.getOrDefault("version", "未知");
+
         ArrayList<String> players = new ArrayList<>();
         while (true) {
             String playerName = getSubData(binaryStream);
@@ -125,9 +135,15 @@ public class ServerInfo {
 
     public void update(String[] data) {
         if (data.length > 0) {
+            protocol = Integer.parseInt(data[2]);
+            version = data[3];
+
             player = Integer.parseInt(data[4]);
             maxPlayer = Integer.parseInt(data[5]);
         } else {
+            protocol = -1;
+            version = "未知";
+
             player = -1;
             maxPlayer = -1;
         }
@@ -154,7 +170,11 @@ public class ServerInfo {
                         .replace("{server}", name).replace("{player}", player + "").replace("{maxplayer}", maxPlayer + "");
             }
             return ServerInfoMainClass.getInstance().getLanguage().getString("button-text-online", "")
-                    .replace("{server}", name).replace("{player}", player + "").replace("{maxplayer}", maxPlayer + "");
+                    .replace("{server}", name)
+                    .replace("{protocol}", protocol + "")
+                    .replace("{version}", version)
+                    .replace("{player}", player + "")
+                    .replace("{maxplayer}", maxPlayer + "");
         } else {
             return ServerInfoMainClass.getInstance().getLanguage().getString("button-text-offline", "")
                     .replace("{server}", name);
