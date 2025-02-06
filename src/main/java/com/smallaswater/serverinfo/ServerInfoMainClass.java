@@ -25,10 +25,7 @@ import lombok.Getter;
 import tip.utils.Api;
 
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -43,6 +40,7 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
 
     public static final ThreadPoolExecutor THREAD_POOL = (ThreadPoolExecutor) Executors.newCachedThreadPool();
     public static final Random RANDOM = new Random();
+    public static final List<String> SUPPORTED_LANGUAGES = Arrays.asList("chs", "eng");
 
     @Getter
     private static ServerInfoMainClass instance;
@@ -78,14 +76,19 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
         this.saveResource("变量说明.txt", true);
 
         this.reloadConfig();
+        String lang = "chs";
+        String serverLang = this.getServer().getLanguage().getLang();
+        if (SUPPORTED_LANGUAGES.contains(serverLang)) {
+            lang = serverLang;
+        }
         this.language = new Config();
-        this.language.load(this.getResource("Language/chs/language.yml"));
+        this.language.load(this.getResource("Language/" + lang + "/language.yml"));
 
         this.syncPlayer = this.getConfig().getBoolean("sync-player", false);
 
         if (this.hasGameCore) {
             Config configDescription = new Config();
-            configDescription.load(this.getResource("Language/chs/ConfigDescription.yml"));
+            configDescription.load(this.getResource("Language/" + lang + "/ConfigDescription.yml"));
             ConfigUtils.addDescription(this.getConfig(), configDescription);
         }
 

@@ -1,0 +1,8 @@
+server-info: "Server list"
+UpdateInfoProvide: "Server information update method. Options: Simple, Details"
+sync-player: "Display the total player count of all servers in MOTD"
+ServerCloseTransfer: "Transfer to a specified server when this server is closed"
+ServerCloseTransfer.enable: "Enable this feature"
+ServerCloseTransfer.showTitle: "Notification message"
+ServerCloseTransfer.ip: "Target server IP"
+ServerCloseTransfer.port: "Target server port"
