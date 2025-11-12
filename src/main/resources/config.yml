@@ -19,3 +19,9 @@ ServerCloseTransfer:
     subTitle: "您将会被转移到其他服务器!"
   ip: "127.0.0.1"
   port: 19132
+  # 启用后将在 serverList 中寻找可用的服务器进行转移，若未启用则会转移到指定的服务器中
+  TransferMode: false
+  # 可转移的服务器列表，名称为 server-info 中定义的 name
+  serverList:
+  - lobby1
+  - lobby2

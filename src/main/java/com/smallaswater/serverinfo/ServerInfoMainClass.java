@@ -241,6 +241,15 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
             return;
         }
 
+        LinkedList<ServerInfo> servers = new LinkedList<>();
+        LinkedList<String> strings = new LinkedList<>(this.getConfig().getStringList("ServerCloseTransfer.serverList"));
+        String sip = this.getServer().getIp() + ":" + this.getServer().getPort();
+        for (ServerInfo targetServer : serverInfos) {
+            if (strings.contains(targetServer.getName()) && targetServer.onLine() && !targetServer.isFull() && !sip.equals(targetServer.getIp() + ":" + targetServer.getPort())) {
+                servers.add(targetServer);
+            }
+        }
+
         for (Player player : this.getServer().getOnlinePlayers().values()) {
             player.sendTitle(
                     this.getConfig().getString("ServerCloseTransfer.showTitle.title"),
@@ -255,13 +264,17 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        String ip = this.getConfig().getString("ServerCloseTransfer.ip");
+        int port = this.getConfig().getInt("ServerCloseTransfer.port");
 
         for (Player player : this.getServer().getOnlinePlayers().values()) {
+            ServerInfo targetServer = servers.get(new Random().nextInt(servers.size()));
+            if (this.getConfig().getBoolean("ServerCloseTransfer.TransferMode",false)) {
+                ip = targetServer.getIp();
+                port = targetServer.getPort();
+            }
             player.transfer(
-                    new InetSocketAddress(
-                            this.getConfig().getString("ServerCloseTransfer.ip"),
-                            this.getConfig().getInt("ServerCloseTransfer.port")
-                    )
+                    new InetSocketAddress(ip, port)
             );
         }
         try {
