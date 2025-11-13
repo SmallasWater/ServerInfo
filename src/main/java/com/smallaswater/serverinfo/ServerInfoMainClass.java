@@ -243,10 +243,14 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
 
         LinkedList<ServerInfo> servers = new LinkedList<>();
         LinkedList<String> strings = new LinkedList<>(this.getConfig().getStringList("ServerCloseTransfer.serverList"));
-        String sip = this.getServer().getIp() + ":" + this.getServer().getPort();
+        String currentServer = this.getServer().getIp() + ":" + this.getServer().getPort();
+        String currentServerName = "";
         for (ServerInfo targetServer : serverInfos) {
-            if (strings.contains(targetServer.getName()) && targetServer.onLine() && !targetServer.isFull() && !sip.equals(targetServer.getIp() + ":" + targetServer.getPort())) {
+            if (strings.contains(targetServer.getName()) && targetServer.onLine() && !targetServer.isFull() && !currentServer.equals(targetServer.getIp() + ":" + targetServer.getPort())) {
                 servers.add(targetServer);
+            }
+            if (currentServer.equals(targetServer.getIp() + ":" + targetServer.getPort())) {
+                currentServerName = targetServer.getName();
             }
         }
 
@@ -272,6 +276,7 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
             if (this.getConfig().getBoolean("ServerCloseTransfer.TransferMode",false)) {
                 ip = targetServer.getIp();
                 port = targetServer.getPort();
+                player.sendMessage(language.getString("player-transfer-restart").replace("{currentServer}", currentServerName).replace("{targetServer}", targetServer.getName()));
             }
             player.transfer(
                     new InetSocketAddress(ip, port)
