@@ -23,6 +23,6 @@ button-text-online: "{server}\n &e{player} &7/&6 {maxplayer}  &a在线 版本: {
 button-text-full: "{server}\n &e{player} &7/&6 {maxplayer}  &a已满"
 button-text-offline: "{server}\n &e服务器离线"
 player-transfer-text: "&e玩家 &a{name} &e前往了 &r{server} &e服务器"
-player-transfer-restart: "正在将您从 {currentServer} 转移到 {targetServer}"
+player-transfer-serverShutdown: "§a正在将您从 {currentServer} 转移到 {targetServer}"
 player-transfer-full: "&e[&f跨服&e] 服务器已满"
 player-transfer-off: "&e[&f跨服&e] 服务器离线"

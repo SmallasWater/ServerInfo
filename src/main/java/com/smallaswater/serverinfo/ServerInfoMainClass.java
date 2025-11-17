@@ -258,9 +258,7 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
             player.sendTitle(
                     this.getConfig().getString("ServerCloseTransfer.showTitle.title"),
                     this.getConfig().getString("ServerCloseTransfer.showTitle.subTitle"),
-                    10,
-                    100,
-                    20
+                    10, 100, 20
             );
         }
         try {
@@ -276,7 +274,7 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
             if (this.getConfig().getBoolean("ServerCloseTransfer.TransferMode",false)) {
                 ip = targetServer.getIp();
                 port = targetServer.getPort();
-                player.sendMessage(language.getString("player-transfer-restart").replace("{currentServer}", currentServerName).replace("{targetServer}", targetServer.getName()));
+                player.sendMessage(language.getString("player-transfer-serverShutdown").replace("{currentServer}", currentServerName).replace("{targetServer}", targetServer.getName()));
             }
             player.transfer(
                     new InetSocketAddress(ip, port)
