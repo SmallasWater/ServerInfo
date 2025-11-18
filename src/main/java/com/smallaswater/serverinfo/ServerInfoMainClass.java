@@ -242,7 +242,7 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
         }
 
         LinkedList<ServerInfo> servers = new LinkedList<>();
-        LinkedList<String> strings = new LinkedList<>(this.getConfig().getStringList("ServerCloseTransfer.serverList"));
+        LinkedList<String> strings = new LinkedList<>(this.getConfig().getStringList("ServerCloseTransfer.ServerList"));
         String currentServer = this.getServer().getIp() + ":" + this.getServer().getPort();
         String currentServerName = "";
         for (ServerInfo targetServer : serverInfos) {

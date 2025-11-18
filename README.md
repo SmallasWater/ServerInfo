@@ -30,12 +30,12 @@ ServerCloseTransfer:
     subTitle: "您将会被转移到其他服务器!"
   ip: "127.0.0.1"
   port: 19132
-  # 为 true 时将在 serverList 中寻找可用的服务器进行转移
+  # 为 true 时将在 ServerList 中寻找可用的服务器进行转移
   # 为 false 时则会转移到 ServerCloseTransfer.ip&prot 定义的服务器中
   TransferMode: false
   # 可转移的服务器列表，名称为 server-info 中定义的 name
   # 例如：name 定义了 lobby1 就填写 lobby1
-  serverList:
+  ServerList:
   - lobby1
   - lobby2
 ```
@@ -72,7 +72,7 @@ server-info:
 ```
 
 #### 二、
-- **`ServerCloseTransfer.serverList` 配置的服务器名是在 `server-info` 中定义的，定义的名字为 `lobby1` 就填写 `lobby1`**
+- **`ServerCloseTransfer.ServerList` 配置的服务器名是在 `server-info` 中定义的，定义的名字为 `lobby1` 就填写 `lobby1`**
 
 
 ```yml
@@ -95,12 +95,12 @@ ServerCloseTransfer:
     subTitle: "您将会被转移到其他服务器!"
   ip: "127.0.0.1"
   port: 19132
-  # 为 true 时将在 serverList 中寻找可用的服务器进行转移
+  # 为 true 时将在 ServerList 中寻找可用的服务器进行转移
   # 为 false 时则会转移到 ServerCloseTransfer.ip&prot 定义的服务器中
   TransferMode: true
   # 可转移的服务器列表，名称为 server-info 中定义的 name
   # 例如：name 定义了 lobby1 就填写 lobby1
-  serverList:
+  ServerList:
   - lobby1
   - lobby2
 ```
