@@ -9,7 +9,6 @@ import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerFormRespondedEvent;
 import cn.nukkit.event.server.QueryRegenerateEvent;
-import cn.nukkit.event.server.ServerStopEvent;
 import cn.nukkit.form.response.FormResponseSimple;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
@@ -21,6 +20,7 @@ import com.smallaswater.serverinfo.utils.TipsVariable;
 import com.smallaswater.serverinfo.utils.VariableUpdateTask;
 import com.smallaswater.serverinfo.windows.CreateAdminWindow;
 import com.smallaswater.serverinfo.windows.CreateWindow;
+import com.smallaswater.serverinfo.windows.ServerStopListener;
 import lombok.Getter;
 import tip.utils.Api;
 
@@ -35,7 +35,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  * Create on 2021/7/13 15:23
  * Package com.smallaswater.serverinfo
  */
-public class ServerInfoMainClass extends PluginBase implements Listener {
+public class ServerInfoMainClass extends PluginBase implements Listener{
 
 
     public static final ThreadPoolExecutor THREAD_POOL = (ThreadPoolExecutor) Executors.newCachedThreadPool();
@@ -100,7 +100,7 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
             THREAD_POOL.execute(new UpdateServerInfoRunnable());
         });
 
-        this.getServer().getPluginManager().registerEvents(instance, instance);
+        this.getServer().getPluginManager().registerEvents(new ServerStopListener(), this);
 
         boolean needVariableUpdate = false;
         //注册TIPS变量
@@ -231,60 +231,6 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
             } else {
                 event.getPlayer().sendMessage(TextFormat.colorize('&', language.getString("player-transfer-off")));
             }
-        }
-    }
-
-    @EventHandler
-    public void onServerStop(ServerStopEvent event) {
-        if (!this.getConfig().getBoolean("ServerCloseTransfer.enable") ||
-                this.getServer().getOnlinePlayers().isEmpty()) {
-            return;
-        }
-
-        LinkedList<ServerInfo> servers = new LinkedList<>();
-        LinkedList<String> strings = new LinkedList<>(this.getConfig().getStringList("ServerCloseTransfer.ServerList"));
-        String currentServer = this.getServer().getIp() + ":" + this.getServer().getPort();
-        String currentServerName = "";
-        for (ServerInfo targetServer : serverInfos) {
-            if (strings.contains(targetServer.getName()) && targetServer.onLine() && !targetServer.isFull() && !currentServer.equals(targetServer.getIp() + ":" + targetServer.getPort())) {
-                servers.add(targetServer);
-            }
-            if (currentServer.equals(targetServer.getIp() + ":" + targetServer.getPort())) {
-                currentServerName = targetServer.getName();
-            }
-        }
-
-        for (Player player : this.getServer().getOnlinePlayers().values()) {
-            player.sendTitle(
-                    this.getConfig().getString("ServerCloseTransfer.showTitle.title"),
-                    this.getConfig().getString("ServerCloseTransfer.showTitle.subTitle"),
-                    10, 100, 20
-            );
-        }
-        try {
-            Thread.sleep(4000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        String ip = this.getConfig().getString("ServerCloseTransfer.ip");
-        int port = this.getConfig().getInt("ServerCloseTransfer.port");
-
-        for (Player player : this.getServer().getOnlinePlayers().values()) {
-            ServerInfo targetServer = servers.get(new Random().nextInt(servers.size()));
-            if (this.getConfig().getBoolean("ServerCloseTransfer.TransferMode",false)) {
-                ip = targetServer.getIp();
-                port = targetServer.getPort();
-                player.sendMessage(language.getString("player-transfer-serverShutdown").replace("{currentServer}", currentServerName).replace("{targetServer}", targetServer.getName()));
-            }
-            player.transfer(
-                    new InetSocketAddress(ip, port)
-            );
-        }
-        try {
-            //让服务器发送完数据包再关闭
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 }

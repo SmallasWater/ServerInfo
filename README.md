@@ -74,7 +74,6 @@ server-info:
 #### 二、
 - **`ServerCloseTransfer.ServerList` 配置的服务器名是在 `server-info` 中定义的，定义的名字为 `lobby1` 就填写 `lobby1`**
 
-
 ```yml
 
 server-info:
