@@ -9,6 +9,7 @@ ServerCloseTransfer.port: "Target server port"
 ServerCloseTransfer.TransferMode: |-
   When set to true, the system will search for an available server in ServerList to transfer to.
   When set to false, it will transfer to the server defined by ServerCloseTransfer.ip & port.
+ServerCloseTransfer.use-WaterdogPE: Enable this feature if using WaterdogPE.
 ServerCloseTransfer.ServerList: |-
   List of transferable servers. The names should match the name defined in server-info.
   Example: If the name is defined as lobby1, then enter lobby1.

@@ -33,6 +33,8 @@ ServerCloseTransfer:
   # 为 true 时将在 ServerList 中寻找可用的服务器进行转移
   # 为 false 时则会转移到 ServerCloseTransfer.ip&prot 定义的服务器中
   TransferMode: false
+  # 如果使用 WaterdogPE 则启用该功能
+  use-WaterdogPE: false
   # 可转移的服务器列表，名称为 server-info 中定义的 name
   # 例如：name 定义了 lobby1 就填写 lobby1
   ServerList:
@@ -97,7 +99,9 @@ ServerCloseTransfer:
   # 为 true 时将在 ServerList 中寻找可用的服务器进行转移
   # 为 false 时则会转移到 ServerCloseTransfer.ip&prot 定义的服务器中
   TransferMode: true
-  # 可转移的服务器列表，名称为 server-info 中定义的 name
+  # 如果使用 WaterdogPE 则启用该功能
+  use-WaterdogPE: false
+ # 可转移的服务器列表，名称为 server-info 中定义的 name
   # 例如：name 定义了 lobby1 就填写 lobby1
   ServerList:
   - lobby1

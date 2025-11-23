@@ -24,7 +24,14 @@ public class ServerStopListener implements Listener {
 
         LinkedList<ServerInfo> servers = new LinkedList<>();
         LinkedList<String> strings = new LinkedList<>(main.getConfig().getStringList("ServerCloseTransfer.ServerList"));
-        String currentServer = main.getServer().getIp() + ":" + main.getServer().getPort();
+        String currentServer = "";
+        if (main.getConfig().getBoolean("ServerCloseTransfer.use-waterdogPe", false)) {
+            if (main.getServer().getIp().equals("0.0.0.0")) {
+                currentServer = "127.0.0.1:" + main.getServer().getPort();
+            }else {
+                currentServer = main.getServer().getIp() + ":" + main.getServer().getPort();
+            }
+        }
         String currentServerName = "";
         for (ServerInfo targetServer : main.getServerInfos()) {
             if (strings.contains(targetServer.getName()) && targetServer.onLine() && !targetServer.isFull() && !currentServer.equals(targetServer.getIp() + ":" + targetServer.getPort())) {
