@@ -20,7 +20,6 @@ import com.smallaswater.serverinfo.utils.TipsVariable;
 import com.smallaswater.serverinfo.utils.VariableUpdateTask;
 import com.smallaswater.serverinfo.windows.CreateAdminWindow;
 import com.smallaswater.serverinfo.windows.CreateWindow;
-import com.smallaswater.serverinfo.windows.ServerStopListener;
 import lombok.Getter;
 import tip.utils.Api;
 

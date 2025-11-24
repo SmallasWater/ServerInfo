@@ -1,10 +1,9 @@
-package com.smallaswater.serverinfo.windows;
+package com.smallaswater.serverinfo;
 
 import cn.nukkit.Player;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.server.ServerStopEvent;
-import com.smallaswater.serverinfo.ServerInfoMainClass;
 import com.smallaswater.serverinfo.servers.ServerInfo;
 
 import java.net.InetSocketAddress;
