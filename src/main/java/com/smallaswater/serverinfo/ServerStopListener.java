@@ -24,24 +24,27 @@ public class ServerStopListener implements Listener {
         LinkedList<ServerInfo> servers = new LinkedList<>();
         LinkedList<String> strings = new LinkedList<>(main.getConfig().getStringList("ServerCloseTransfer.ServerList"));
         String currentServer = "";
-        boolean isCurrentServer = false;
-        if (main.getConfig().getBoolean("ServerCloseTransfer.use-WaterdogPE", false)) {
-            if (main.getServer().getIp().equals("0.0.0.0")) {
-                currentServer = "127.0.0.1:" + main.getServer().getPort();
-            }else {
-                currentServer = main.getServer().getIp() + ":" + main.getServer().getPort();
-            }
-        }else {
-            currentServer =  main.getServer().getIp() + ":" + main.getServer().getPort();
-        }
         String currentServerName = "";
-        for (ServerInfo targetServer : main.getServerInfos()) {
-            isCurrentServer = currentServer.equals(targetServer.getIp() + ":" + targetServer.getPort());
-            if (strings.contains(targetServer.getName()) && targetServer.onLine() && isCurrentServer) {
-                servers.add(targetServer);
+        boolean isCurrentServer;
+        if (main.getConfig().getBoolean("ServerCloseTransfer.TransferMode",false)) {
+            if (main.getConfig().getBoolean("ServerCloseTransfer.use-WaterdogPE", false)) {
+                if (main.getServer().getIp().equals("0.0.0.0")) {
+                    currentServer = "127.0.0.1:" + main.getServer().getPort();
+                }else {
+                    currentServer = main.getServer().getIp() + ":" + main.getServer().getPort();
+                }
+            }else {
+                currentServer =  main.getServer().getIp() + ":" + main.getServer().getPort();
             }
-            if (isCurrentServer) {
-                currentServerName = targetServer.getName();
+
+            for (ServerInfo targetServer : main.getServerInfos()) {
+                isCurrentServer = currentServer.equals(targetServer.getIp() + ":" + targetServer.getPort());
+                if (strings.contains(targetServer.getName()) && targetServer.onLine() && isCurrentServer) {
+                    servers.add(targetServer);
+                }
+                if (isCurrentServer) {
+                    currentServerName = targetServer.getName();
+                }
             }
         }
 
