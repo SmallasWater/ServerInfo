@@ -26,6 +26,4 @@ ServerCloseTransfer:
   use-WaterdogPE: false
   # 可转移的服务器列表，名称为 server-info 中定义的 name
   # 例如：name 定义了 lobby1 就填写 lobby1
-  ServerList:
-  - lobby1
-  - lobby2
+  ServerList: []

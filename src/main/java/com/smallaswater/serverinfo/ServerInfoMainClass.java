@@ -65,6 +65,7 @@ public class ServerInfoMainClass extends PluginBase implements Listener{
 
     @Override
     public void onEnable() {
+        updateConfig();
         try {
             Class.forName("cn.lanink.gamecore.GameCore");
             this.hasGameCore = true;
@@ -231,5 +232,19 @@ public class ServerInfoMainClass extends PluginBase implements Listener{
                 event.getPlayer().sendMessage(TextFormat.colorize('&', language.getString("player-transfer-off")));
             }
         }
+    }
+
+    public void updateConfig() {
+        Config config = getConfig();
+        if (!config.exists("ServerCloseTransfer.TransferMode")) {
+            config.set("ServerCloseTransfer.TransferMode", false);
+        }
+        if (!config.exists("ServerCloseTransfer.use-WaterdogPE")) {
+            config.set("ServerCloseTransfer.use-WaterdogPE", false);
+        }
+        if (!config.exists("ServerCloseTransfer.ServerList")) {
+            config.set("ServerCloseTransfer.ServerList", Arrays.asList(""));
+        }
+        config.save();
     }
 }
