@@ -34,7 +34,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  * Create on 2021/7/13 15:23
  * Package com.smallaswater.serverinfo
  */
-public class ServerInfoMainClass extends PluginBase implements Listener{
+public class ServerInfoMainClass extends PluginBase implements Listener {
 
 
     public static final ThreadPoolExecutor THREAD_POOL = (ThreadPoolExecutor) Executors.newCachedThreadPool();
@@ -100,6 +100,7 @@ public class ServerInfoMainClass extends PluginBase implements Listener{
             THREAD_POOL.execute(new UpdateServerInfoRunnable());
         });
 
+        this.getServer().getPluginManager().registerEvents(this, this);
         this.getServer().getPluginManager().registerEvents(new ServerStopListener(), this);
 
         boolean needVariableUpdate = false;
