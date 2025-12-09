@@ -64,7 +64,9 @@ public class ServerStopListener implements Listener {
             if (main.getConfig().getBoolean("ServerCloseTransfer.TransferMode",false)) {
                 ip = targetServer.getIp();
                 port = targetServer.getPort();
-                player.sendMessage(main.getLanguage().getString("player-transfer-serverShutdown").replace("{currentServer}", currentServerName).replace("{targetServer}", targetServer.getName()));
+                if (main.getConfig().getBoolean("ServerCloseTransfer.use-WaterdogPE", false)) {
+                    player.sendMessage(main.getLanguage().getString("player-transfer-serverShutdown").replace("{currentServer}", currentServerName).replace("{targetServer}", targetServer.getName()));
+                }
             }
             player.transfer( new InetSocketAddress(ip, port) );
         }
