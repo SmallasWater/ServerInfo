@@ -1,5 +1,6 @@
 # **ServerInfo**
-[下载地址](https://ci.lanink.cn/view/SmallasWater/job/ServerInfo/)
+[下载地址](https://motci.cn/job/ServerInfo/)  
+
 - Nukkit服务器的跨服菜单
 - 显示服务器的在线人数
 
