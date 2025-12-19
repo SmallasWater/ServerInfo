@@ -23,5 +23,6 @@ button-text-online: "{server}\n &e{player} &7/&6 {maxplayer}  &aOnline Version: 
 button-text-full: "{server}\n &e{player} &7/&6 {maxplayer}  &aFull"
 button-text-offline: "{server}\n &eServer Offline"
 player-transfer-text: "&ePlayer &a{name} &ehas transferred to &r{server} &eserver"
+player-transfer-serverShutdown: "§aTransferring you from {currentServer} to {targetServer}"
 player-transfer-full: "&e[&fTransfer-Server&e] Server is full"
 player-transfer-off: "&e[&fTransfer-Server&e] Server offline"

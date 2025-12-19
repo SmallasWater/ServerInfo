@@ -9,7 +9,6 @@ import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerFormRespondedEvent;
 import cn.nukkit.event.server.QueryRegenerateEvent;
-import cn.nukkit.event.server.ServerStopEvent;
 import cn.nukkit.form.response.FormResponseSimple;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
@@ -66,6 +65,7 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
 
     @Override
     public void onEnable() {
+        updateConfig();
         try {
             Class.forName("cn.lanink.gamecore.GameCore");
             this.hasGameCore = true;
@@ -100,7 +100,8 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
             THREAD_POOL.execute(new UpdateServerInfoRunnable());
         });
 
-        this.getServer().getPluginManager().registerEvents(instance, instance);
+        this.getServer().getPluginManager().registerEvents(this, this);
+        this.getServer().getPluginManager().registerEvents(new ServerStopListener(), this);
 
         boolean needVariableUpdate = false;
         //注册TIPS变量
@@ -234,41 +235,17 @@ public class ServerInfoMainClass extends PluginBase implements Listener {
         }
     }
 
-    @EventHandler
-    public void onServerStop(ServerStopEvent event) {
-        if (!this.getConfig().getBoolean("ServerCloseTransfer.enable") ||
-                this.getServer().getOnlinePlayers().isEmpty()) {
-            return;
+    public void updateConfig() {
+        Config config = getConfig();
+        if (!config.exists("ServerCloseTransfer.TransferMode")) {
+            config.set("ServerCloseTransfer.TransferMode", false);
         }
-
-        for (Player player : this.getServer().getOnlinePlayers().values()) {
-            player.sendTitle(
-                    this.getConfig().getString("ServerCloseTransfer.showTitle.title"),
-                    this.getConfig().getString("ServerCloseTransfer.showTitle.subTitle"),
-                    10,
-                    100,
-                    20
-            );
+        if (!config.exists("ServerCloseTransfer.use-WaterdogPE")) {
+            config.set("ServerCloseTransfer.use-WaterdogPE", false);
         }
-        try {
-            Thread.sleep(4000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if (!config.exists("ServerCloseTransfer.ServerList")) {
+            config.set("ServerCloseTransfer.ServerList", Arrays.asList(""));
         }
-
-        for (Player player : this.getServer().getOnlinePlayers().values()) {
-            player.transfer(
-                    new InetSocketAddress(
-                            this.getConfig().getString("ServerCloseTransfer.ip"),
-                            this.getConfig().getInt("ServerCloseTransfer.port")
-                    )
-            );
-        }
-        try {
-            //让服务器发送完数据包再关闭
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        config.save();
     }
 }
