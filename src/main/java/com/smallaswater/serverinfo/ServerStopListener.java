@@ -35,13 +35,16 @@ public class ServerStopListener implements Listener {
 
             for (ServerInfo targetServer : main.getServerInfos()) {
                 boolean isCurrentServer = currentServer.equals(targetServer.getIp() + ":" + targetServer.getPort());
-                if (targetServers.contains(targetServer.getName()) && targetServer.onLine() && isCurrentServer) {
+                main.getLogger().info("QWQ:: " + targetServers.contains(targetServer.getName()) + targetServer.onLine() + !isCurrentServer);
+                if (targetServers.contains(targetServer.getName()) && targetServer.onLine() && targetServer.isFull() && !isCurrentServer) {
                     servers.add(targetServer);
+                    main.getLogger().info("QWQ: assddv");
                 }
                 if (isCurrentServer) {
                     currentServerName = targetServer.getName();
                 }
             }
+            main.getLogger().info(servers.toString());
         }
 
         for (Player player : main.getServer().getOnlinePlayers().values()) {
