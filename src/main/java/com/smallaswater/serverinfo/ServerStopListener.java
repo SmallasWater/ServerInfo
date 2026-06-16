@@ -11,25 +11,28 @@ import java.util.LinkedList;
 import java.util.Random;
 
 public class ServerStopListener implements Listener {
-    
+
     @EventHandler
     public void onServerStop(ServerStopEvent event) {
         ServerInfoMainClass main = ServerInfoMainClass.getInstance();
-        
+
         if (!main.getConfig().getBoolean("ServerCloseTransfer.enable") || main.getServer().getOnlinePlayers().isEmpty()) {
             return;
         }
+
+        boolean transferMode = main.getConfig().getBoolean("ServerCloseTransfer.TransferMode", false);
+        boolean useWaterdogPE = main.getConfig().getBoolean("ServerCloseTransfer.use-WaterdogPE", false);
 
         LinkedList<ServerInfo> servers = new LinkedList<>();
         LinkedList<String> targetServers = new LinkedList<>(main.getConfig().getStringList("ServerCloseTransfer.ServerList"));
         String currentServer = main.getServer().getIp() + ":" + main.getServer().getPort();
         String currentServerName = "";
-        if (main.getConfig().getBoolean("ServerCloseTransfer.TransferMode",false)) {
-            if (main.getConfig().getBoolean("ServerCloseTransfer.use-WaterdogPE", false)) {
+        if (transferMode) {
+            if (useWaterdogPE) {
                 if (main.getServer().getIp().equals("0.0.0.0")) {
                     currentServer = "127.0.0.1:" + main.getServer().getPort();
                 }
-            }else if (main.getServer().getIp().equals("0.0.0.0")) {
+            } else if (main.getServer().getIp().equals("0.0.0.0")) {
                 currentServer = main.getConfig().getString("ServerCloseTransfer.ip") + ":" + main.getServer().getPort();
             }
 
@@ -59,12 +62,18 @@ public class ServerStopListener implements Listener {
         String ip = main.getConfig().getString("ServerCloseTransfer.ip");
         int port = main.getConfig().getInt("ServerCloseTransfer.port");
 
+        // TransferMode 下若无可用目标服务器,记录日志并跳过转移,避免对空列表取值抛异常
+        if (transferMode && servers.isEmpty()) {
+            main.getLogger().warning("ServerCloseTransfer: 没有可用的目标服务器,跳过转移");
+            return;
+        }
+
         for (Player player : main.getServer().getOnlinePlayers().values()) {
-            ServerInfo targetServer = servers.get(new Random().nextInt(servers.size()));
-            if (main.getConfig().getBoolean("ServerCloseTransfer.TransferMode",false)) {
+            if (transferMode) {
+                ServerInfo targetServer = servers.get(new Random().nextInt(servers.size()));
                 ip = targetServer.getIp();
                 port = targetServer.getPort();
-                if (main.getConfig().getBoolean("ServerCloseTransfer.use-WaterdogPE", false)) {
+                if (useWaterdogPE) {
                     player.sendMessage(main.getLanguage().getString("player-transfer-serverShutdown").replace("{currentServer}", currentServerName).replace("{targetServer}", targetServer.getName()));
                 }
             }
