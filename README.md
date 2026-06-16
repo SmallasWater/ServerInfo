@@ -115,7 +115,7 @@ server-ip=127.0.0.1
 </details>
 
 <details>
-<summary>WDPE config.yml</summary>
+<summary>ServerInfo config.yml</summary>
 
 ```yml
 # 省略了部分无关的配置项
@@ -148,9 +148,12 @@ ServerCloseTransfer:
 
 </details>
 
-#### 三、启用多服务器转移但不搭配 WDPE 来使用****
+#### **三、启用多服务器转移但不搭配 WDPE 来使用**
 1. **服务端的 `server-ip=` 为 `0.0.0.0` 即可**
 2. **因为服务器的ip和port(端口)是判断可供转移的服务器是否为当前服务器的，所以是需要修改 `ServerCloseTransfer.ip` 的ip来实现以防玩家转移原服务器**
+
+<details>
+<summary>ServerInfo config.yml</summary>
 
 ```yml
 # 省略了部分无关的配置项
@@ -181,3 +184,5 @@ ServerCloseTransfer:
     - lobby1
     - lobby2
 ```
+
+</details>
